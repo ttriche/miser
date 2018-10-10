@@ -1,0 +1,24 @@
+Package: sesamizeGEO
+Type: Package
+Title: some utility functions for digesting (GEO) IDATs with sesame
+Description: this package makes my life less annoying when working off of GEO
+Version: 0.1.0
+Date: 2018-10-10
+Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), 
+                    email="tim.triche@gmail.com"))
+Author: Tim Triche [aut, cre]
+Maintainer: Tim Triche <tim.triche@gmail.com>
+URL: https://github.com/ttriche/sesamizeGEO
+BugReports: https://github.com/ttriche/sesamizeGEO/issues
+License: GPL-3
+Depends:
+    R (>= 3.0.0)
+Imports:
+    minfi,
+    sesame,
+    ComplexHeatmap
+Suggests:
+    covr,
+    testthat
+RoxygenNote: 6.1.0
+Roxygen: list(markdown = TRUE)
