@@ -4,12 +4,16 @@
 \alias{sesamizeGEO}
 \title{sesamize a bunch of IDATs from GEO (or anywhere else with sensible names)}
 \usage{
-sesamizeGEO(subjects = NULL, elts = c(1, 2, 3))
+sesamizeGEO(subjects = NULL, elts = c(1, 2, 3), mask = TRUE, ...)
 }
 \arguments{
 \item{subjects}{the names of each subject, if known (default: autodetect)}
 
 \item{elts}{which elements to extract for the array Basename (1:3)}
+
+\item{mask}{add rowData(grSet)$mask using sesameData? (TRUE)}
+
+\item{...}{more arguments to pass on to sesamize}
 }
 \value{
 \preformatted{       a GenomicRatioSet with metadata(grSet)$SNPs filled out
