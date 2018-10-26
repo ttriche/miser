@@ -2,7 +2,7 @@ Package: sesamizeGEO
 Type: Package
 Title: some utility functions for digesting (GEO) IDATs with sesame
 Description: this package makes my life less annoying when working off of GEO
-Version: 0.1.3
+Version: 0.1.4
 Date: 2018-10-26
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), 
                     email="tim.triche@gmail.com"))
@@ -16,9 +16,13 @@ Depends:
 Imports:
     minfi,
     sesame,
+    DMRcate,
+    RSQLite, 
+    GEOmetadb,
     ComplexHeatmap
 Suggests:
     covr,
+    compartmap,
     testthat
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)

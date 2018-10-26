@@ -4,7 +4,8 @@
 \alias{sesamizeGEO}
 \title{sesamize a bunch of IDATs from GEO (or anywhere else with sensible names)}
 \usage{
-sesamizeGEO(subjects = NULL, elts = c(1, 2, 3), mask = TRUE, ...)
+sesamizeGEO(subjects = NULL, elts = 1:3, mask = TRUE,
+  titles = FALSE, ...)
 }
 \arguments{
 \item{subjects}{the names of each subject, if known (default: autodetect)}
@@ -13,6 +14,8 @@ sesamizeGEO(subjects = NULL, elts = c(1, 2, 3), mask = TRUE, ...)
 
 \item{mask}{add rowData(grSet)$mask using sesameData? (TRUE)}
 
+\item{titles}{look up the titles for GSM entries from GEO? (FALSE)}
+
 \item{...}{more arguments to pass on to sesamize}
 }
 \value{
@@ -20,6 +23,5 @@ sesamizeGEO(subjects = NULL, elts = c(1, 2, 3), mask = TRUE, ...)
 }
 }
 \description{
-I got tired of typing the same crap to process IDATs.
 This function processes a directory full of IDATs, but sensibly.
 }

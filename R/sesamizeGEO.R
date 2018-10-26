@@ -1,11 +1,11 @@
 #' sesamize a bunch of IDATs from GEO (or anywhere else with sensible names)
 #' 
-#' I got tired of typing the same crap to process IDATs.
 #' This function processes a directory full of IDATs, but sensibly. 
 #' 
 #' @param   subjects  the names of each subject, if known (default: autodetect)
 #' @param   elts      which elements to extract for the array Basename (1:3)
 #' @param   mask      add rowData(grSet)$mask using sesameData? (TRUE) 
+#' @param   titles    look up the titles for GSM entries from GEO? (FALSE) 
 #' @param   ...       more arguments to pass on to sesamize
 #'
 #' @return            a GenomicRatioSet with metadata(grSet)$SNPs filled out
@@ -14,7 +14,7 @@
 #' @import  sesame
 #' 
 #' @export 
-sesamizeGEO <- function(subjects=NULL, elts=c(1,2,3), mask=TRUE, ...) { 
+sesamizeGEO <- function(subjects=NULL, elts=1:3, mask=TRUE, titles=FALSE, ...) {
   samps <- data.frame(Basename=unique(elts(list.files(patt="*idat*"), z=elts)))
   if (is.null(subjects)) {
     samps$subject <- elts(samps$Basename)
@@ -26,10 +26,7 @@ sesamizeGEO <- function(subjects=NULL, elts=c(1,2,3), mask=TRUE, ...) {
   sampleNames(rgSet) <- rgSet$subject
   message("Sesamizing...") 
   res <- sesamize(rgSet, ...)
-  if (mask) {
-    message("Adding rowData(grSet)$mask...")
-    return(sesamask(res))
-  } else { 
-    return(res)
-  } 
+  if (titles) res <- titleGEO(res)
+  if (mask) res <- sesamask(res)
+  return(res)
 }
