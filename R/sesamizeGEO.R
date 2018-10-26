@@ -22,7 +22,7 @@ sesamizeGEO <- function(subjects=NULL, elts=c(1,2,3), mask=TRUE, ...) {
     stopifnot(identical(names(subjects), samps$Basename))
   }
   message("Reading IDATs into temporary RedGreenChannelSet...") 
-  rgSet <- read.metharray.exp(base=".", targets=samps)
+  rgSet <- read.metharray.exp(base=".", targets=samps, verbose=TRUE)
   sampleNames(rgSet) <- rgSet$subject
   message("Sesamizing...") 
   res <- sesamize(rgSet, ...)
