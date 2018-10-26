@@ -28,11 +28,11 @@ titles <- function(x, column="subject", cachePath=NULL) {
     getSQLiteFile(destdir=cachePath)
   }
   con <- dbConnect(RSQLite::SQLite(), cacheFile)
-  query <- paste0("SELECT gsm, characteristics_ch1 FROM gsm WHERE gsm IN ('",
+  query <- paste0("SELECT gsm, title FROM gsm WHERE gsm IN ('",
                   paste(GSMs, collapse="','"), "')")
   res <- dbGetQuery(con, query)
   rownames(res) <- res$gsm
-  res <- res[GSMs] # enforce
+  res <- res[GSMs,] # enforce
   if (is(x, "GenomicRatioSet")) {
     colnames(x) <- x$title <- res$title
     return(x)

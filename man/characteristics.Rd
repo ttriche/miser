@@ -4,17 +4,20 @@
 \alias{characteristics}
 \title{get the characteristics of a bunch of GSM entries}
 \usage{
-characteristics(x, column = "subject", cachePath = NULL)
+characteristics(x, column = "subject", titles = FALSE,
+  cachePath = NULL)
 }
 \arguments{
 \item{x}{either a grSet from sesamizeGEO, or a bunch of GSMs}
 
 \item{column}{name of the column holding the GSMs ("subject")}
 
+\item{titles}{tack on the titles as well? (FALSE)}
+
 \item{cachePath}{where to cache the GEOmetadb sqlite file (tempdir())}
 }
 \value{
-\preformatted{       whatever is in characteristics_ch1 for the GSMs 
+\preformatted{       whatever is in characteristics_ch1, parsed 
 }
 }
 \description{
