@@ -7,7 +7,7 @@
 saveAsHDF5(x, dir = NULL, ...)
 }
 \arguments{
-\item{x}{a GenomicRatioSet (todo: support RGChannelSets and SignalSets)}
+\item{x}{a GenomicRatioSet (TODO: support RGChannelSets and SignalSets)}
 
 \item{dir}{name of the directory to store the object its data (name of x)}
 

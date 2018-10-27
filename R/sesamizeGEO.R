@@ -18,10 +18,13 @@
 #' 
 #' @import  minfi
 #' @import  sesame
+#' @import  rhdf5 
 #' 
 #' @export 
 sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, ...){
 
+  # baby steps towards out-of-core processing
+  if (HDF5) setRealizationBackend("HDF5Array") 
   if (is(subjects, "RGChannelSet")) {
     stopifnot(all(c("subject","Basename") %in% names(colData(subjects))))
     message("Testing annotations on the first few samples...") 
@@ -38,8 +41,8 @@ sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, ...){
     res <- sesamize(rgSet, ...)
   }
   if (annot) res <- addTitles(addCharacteristics(res))
-  if (HDF5) message("HDF5 support isn't set up yet")
   res <- sesamask(res) # add explicit probe mask 
+  if (HDF5) message("HDF5 realization used; you will need to use saveAsHDF5.") 
   return(res)
 
 }

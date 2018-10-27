@@ -15,7 +15,7 @@ getDMRs(x, design = NULL, dropXY = TRUE, impute = TRUE,
 
 \item{dropXY}{drop sex chromosomes? (TRUE, usually a good idea)}
 
-\item{impute}{impute NAs if > 0.5 of samples are non-NA? (TRUE)}
+\item{impute}{impute NAs (TRUE, but beware, this WILL hang on HDF5)}
 
 \item{contrasts}{apply contrasts? (FALSE)}
 
