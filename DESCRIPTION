@@ -2,7 +2,7 @@ Package: sesamizeGEO
 Type: Package
 Title: some utility functions for digesting (GEO) IDATs with sesame
 Description: this package makes my life less annoying when working off of GEO
-Version: 0.1.14
+Version: 0.1.15
 Date: 2018-10-27
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), 
                     email="tim.triche@gmail.com"))
@@ -12,13 +12,15 @@ URL: https://github.com/ttriche/sesamizeGEO
 BugReports: https://github.com/ttriche/sesamizeGEO/issues
 License: GPL-3
 Depends:
+    minfi,
     R (>= 3.0.0)
 Imports:
-    minfi,
     sesame,
     DMRcate,
     RSQLite, 
     GEOmetadb,
+    HDF5Array,
+    DelayedArray,
     ComplexHeatmap
 Suggests:
     covr,
