@@ -12,7 +12,7 @@
 #' @import  RSQLite
 #' 
 #' @export 
-titles <- function(x, column="subject", cachePath=NULL) { 
+addTitles <- function(x, column="subject", cachePath=NULL) { 
   if (is(x, "GenomicRatioSet")) {
     if (!column %in% names(colData(x))) {
       stop("You need a column named ", column, " in your colData to run this")

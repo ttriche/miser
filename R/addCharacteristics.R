@@ -7,13 +7,13 @@
 #' @param   titles    tack on the titles as well? (FALSE)
 #' @param   cachePath where to cache the GEOmetadb sqlite file (tempdir())
 #'
-#' @return            whatever is in characteristics_ch1, parsed 
+#' @return            a grSet, perhaps with additional colData, or a data.frame
 #' 
 #' @import  GEOmetadb
 #' @import  RSQLite
 #' 
 #' @export 
-characteristics <- function(x, column="subject", titles=FALSE, cachePath=NULL) {
+addCharacteristics <- function(x, column="subject",titles=FALSE,cachePath=NULL){
   if (is(x, "GenomicRatioSet")) {
     if (!column %in% names(colData(x))) {
       stop("You need a column named ", column, " in your colData to run this")
@@ -33,11 +33,18 @@ characteristics <- function(x, column="subject", titles=FALSE, cachePath=NULL) {
                   paste(GSMs, collapse="','"), "')")
   res <- dbGetQuery(con, query)
   rownames(res) <- res$gsm
+  if (!all(GSMs %in% res$gsm)) stop("Missing records! Aborting.")
   toParse <- res[GSMs, "characteristics_ch1"]
   parsed <- do.call(rbind, lapply(strsplit(toParse, ";\t"), elts, y=": ", 2))
   colnames(parsed) <- sapply(strsplit(toParse[1], ";\t")[[1]], elts, y=":")
   rownames(parsed) <- GSMs
   parsed <- as.data.frame(parsed)
-  if (titles) parsed$title <- titles(GSMs)
-  return(parsed)
+  if (titles) parsed$title <- addTitles(GSMs)
+  parsed$gsm <- GSMs
+  if (is(x, "GenomicRatioSet")) {
+    for (i in names(parsed)) colData(x)[, i] <- parsed[,i]
+    return(x)
+  } else {
+    return(parsed)
+  }
 }
