@@ -25,25 +25,19 @@ sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, ...){
   if (is(subjects, "RGChannelSet")) {
     stopifnot(all(c("subject","Basename") %in% names(colData(subjects))))
     message("Testing annotations on a subset of columns...") 
-    tmp <- sesamize(subjects[,1])
+    tmp <- sesamize(subjects[,1]) # will stop() if no annots
     res <- sesamask(sesamize(subjects, ...))
   } else { 
-    basenames <- unique(elts(list.files(patt="*idat*"), z=frags))
-    samps <- data.frame(Basename=basenames)
-    if (is.null(subjects)) {
-      samps$subject <- elts(samps$Basename)
-    } else { 
-      stopifnot(identical(names(subjects), samps$Basename))
-    }
-    message("Testing annotations on a subset of files...") 
+    samps <- getSamps(subjects=subjects, frags=frags)
+    message("Testing annotations on a subset of IDATs...") 
     stopifnot(testIDATs(samps, frags)) 
     message("Reading IDATs into a temporary RedGreenChannelSet...") 
-    rgSet <- read.metharray.exp(base=".", targets=samps, verbose=TRUE)
-    sampleNames(rgSet) <- rgSet$subject
+    rgSet <- getRGChannelSet(subjects=subjects, frags=frags)
     message("Sesamizing...") 
     res <- sesamask(sesamize(rgSet, ...))
   }
-  if (annot) res <- titleGEO(res)
-  if (HDF5) message("HDF5 support isn't set up yet :-(") 
+  if (annot) res <- addTitles(addCharateristics(res))
+  if (HDF5) message("HDF5 support isn't set up yet")
   return(res)
+
 }
