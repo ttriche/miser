@@ -7,7 +7,7 @@
 testIDATs(samps, elts = 1:3)
 }
 \arguments{
-\item{samps}{one or more rows of the \code{samps} data.frame with \code{Basename}}
+\item{samps}{two or more rows of the \code{samps} data.frame with \code{Basename}}
 
 \item{elts}{which elements to extract for the array Basename (1:3)}
 }
