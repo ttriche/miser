@@ -27,7 +27,7 @@ sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, ...){
     message("Testing annotations on the first few samples...") 
     tmp <- sesamize(subjects[,1:2]) # will stop() if anything is out of wack
     message("Sesamizing...") 
-    res <- sesamask(sesamize(subjects, ...))
+    res <- sesamize(subjects, ...)
   } else { 
     samps <- getSamps(subjects=subjects, frags=frags)
     message("Testing annotations on the first few IDATs...") 
@@ -35,10 +35,11 @@ sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, ...){
     message("Reading IDATs into a temporary RedGreenChannelSet...") 
     rgSet <- getRGChannelSet(subjects=subjects, frags=frags)
     message("Sesamizing...") 
-    res <- sesamask(sesamize(rgSet, ...))
+    res <- sesamize(rgSet, ...)
   }
   if (annot) res <- addTitles(addCharateristics(res))
   if (HDF5) message("HDF5 support isn't set up yet")
+  res <- sesamask(res) # add explicit probe mask 
   return(res)
 
 }
