@@ -37,7 +37,7 @@ sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, ...){
     message("Sesamizing...") 
     res <- sesamize(rgSet, ...)
   }
-  if (annot) res <- addTitles(addCharateristics(res))
+  if (annot) res <- addTitles(addCharacteristics(res))
   if (HDF5) message("HDF5 support isn't set up yet")
   res <- sesamask(res) # add explicit probe mask 
   return(res)
