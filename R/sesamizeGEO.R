@@ -1,11 +1,17 @@
 #' sesamize a bunch of IDATs from GEO (or anywhere else with sensible names)
 #' 
-#' This function processes a directory full of IDATs, but sensibly. 
+#' This function processes a directory full of IDATs, somewhat sensibly. 
+#'
+#' If an RGChannelSet object is provided as the first argument, assume it's 
+#' already got a $subject colData column and process as if we'd got to there. 
+#'
+#' A better-er idea would probably involve running the IDATs individually and
+#' then bolting them all together into an HDF5-backed grSet at the last instant.
 #' 
-#' @param   subjects  the names of each subject, if known (default: autodetect)
-#' @param   elts      which elements to extract for the array Basename (1:3)
-#' @param   mask      add rowData(grSet)$mask using sesameData? (TRUE) 
-#' @param   titles    look up the titles for GSM entries from GEO? (FALSE) 
+#' @param   subjects  the names of each subject, or an rgSet (autodetect)
+#' @param   frags     which elements to extract for the array Basename (1:3)
+#' @param   annot     look up the titles and characteristics for GSMs? (FALSE)
+#' @param   HDF5      EXPERIMENTAL: make the grSet HDF5-backed? (FALSE)
 #' @param   ...       more arguments to pass on to sesamize
 #'
 #' @return            a GenomicRatioSet with metadata(grSet)$SNPs filled out
@@ -14,19 +20,30 @@
 #' @import  sesame
 #' 
 #' @export 
-sesamizeGEO <- function(subjects=NULL, elts=1:3, mask=TRUE, titles=FALSE, ...) {
-  samps <- data.frame(Basename=unique(elts(list.files(patt="*idat*"), z=elts)))
-  if (is.null(subjects)) {
-    samps$subject <- elts(samps$Basename)
+sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, ...){
+
+  if (is(subjects, "RGChannelSet")) {
+    stopifnot(all(c("subject","Basename") %in% names(colData(subjects))))
+    message("Testing annotations on a subset of columns...") 
+    tmp <- sesamize(subjects[,1])
+    res <- sesamask(sesamize(subjects, ...))
   } else { 
-    stopifnot(identical(names(subjects), samps$Basename))
+    basenames <- unique(elts(list.files(patt="*idat*"), z=frags))
+    samps <- data.frame(Basename=basenames)
+    if (is.null(subjects)) {
+      samps$subject <- elts(samps$Basename)
+    } else { 
+      stopifnot(identical(names(subjects), samps$Basename))
+    }
+    message("Testing annotations on a subset of files...") 
+    stopifnot(testIDATs(samps, frags)) 
+    message("Reading IDATs into a temporary RedGreenChannelSet...") 
+    rgSet <- read.metharray.exp(base=".", targets=samps, verbose=TRUE)
+    sampleNames(rgSet) <- rgSet$subject
+    message("Sesamizing...") 
+    res <- sesamask(sesamize(rgSet, ...))
   }
-  message("Reading IDATs into temporary RedGreenChannelSet...") 
-  rgSet <- read.metharray.exp(base=".", targets=samps, verbose=TRUE)
-  sampleNames(rgSet) <- rgSet$subject
-  message("Sesamizing...") 
-  res <- sesamize(rgSet, ...)
-  if (titles) res <- titleGEO(res)
-  if (mask) res <- sesamask(res)
+  if (annot) res <- titleGEO(res)
+  if (HDF5) message("HDF5 support isn't set up yet :-(") 
   return(res)
 }

@@ -4,14 +4,18 @@
 \alias{getDMRs}
 \title{use DMRcate to get DMRs (with less hassle)}
 \usage{
-getDMRs(x, design = NULL, contrasts = FALSE, cont.matrix = NULL,
-  coef = 2, fdr = 0.05, betacutoff = 0.1, keep.raw.DMLs = TRUE,
-  ...)
+getDMRs(x, design = NULL, dropXY = TRUE, impute = TRUE,
+  contrasts = FALSE, cont.matrix = NULL, coef = 2, fdr = 0.05,
+  betacutoff = 0.1, DMLs = TRUE, ...)
 }
 \arguments{
 \item{x}{a GenomicRatioSet}
 
 \item{design}{a design matrix (NULL)}
+
+\item{dropXY}{drop sex chromosomes? (TRUE, usually a good idea)}
+
+\item{impute}{impute NAs if > 0.5 of samples are non-NA? (TRUE)}
 
 \item{contrasts}{apply contrasts? (FALSE)}
 
@@ -23,7 +27,7 @@ getDMRs(x, design = NULL, contrasts = FALSE, cont.matrix = NULL,
 
 \item{betacutoff}{DMRs must have at least this maxbetaFC (0.1)}
 
-\item{keep.raw.DMLs}{keep differentially methylated loci for plots? (TRUE)}
+\item{DMLs}{keep raw differentially methylated loci to plot (TRUE)}
 
 \item{...}{other arguments to pass to dmrcate}
 }

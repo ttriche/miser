@@ -4,17 +4,17 @@
 \alias{sesamizeGEO}
 \title{sesamize a bunch of IDATs from GEO (or anywhere else with sensible names)}
 \usage{
-sesamizeGEO(subjects = NULL, elts = 1:3, mask = TRUE,
-  titles = FALSE, ...)
+sesamizeGEO(subjects = NULL, frags = 1:3, annot = FALSE,
+  HDF5 = FALSE, ...)
 }
 \arguments{
-\item{subjects}{the names of each subject, if known (default: autodetect)}
+\item{subjects}{the names of each subject, or an rgSet (autodetect)}
 
-\item{elts}{which elements to extract for the array Basename (1:3)}
+\item{frags}{which elements to extract for the array Basename (1:3)}
 
-\item{mask}{add rowData(grSet)$mask using sesameData? (TRUE)}
+\item{annot}{look up the titles and characteristics for GSMs? (FALSE)}
 
-\item{titles}{look up the titles for GSM entries from GEO? (FALSE)}
+\item{HDF5}{EXPERIMENTAL: make the grSet HDF5-backed? (FALSE)}
 
 \item{...}{more arguments to pass on to sesamize}
 }
@@ -23,5 +23,12 @@ sesamizeGEO(subjects = NULL, elts = 1:3, mask = TRUE,
 }
 }
 \description{
-This function processes a directory full of IDATs, but sensibly.
+This function processes a directory full of IDATs, somewhat sensibly.
+}
+\details{
+If an RGChannelSet object is provided as the first argument, assume it's
+already got a $subject colData column and process as if we'd got to there.
+
+A better-er idea would probably involve running the IDATs individually and
+then bolting them all together into an HDF5-backed grSet at the last instant.
 }
