@@ -35,6 +35,7 @@ addTitles <- function(x, column="subject", cachePath=NULL) {
   res <- res[GSMs,] # enforce
   if (is(x, "GenomicRatioSet")) {
     colnames(x) <- x$title <- res$title
+    colnames(metadata(x)$SNPs) <- colnames(x)
     return(x)
   } else { 
     return(res$title)
