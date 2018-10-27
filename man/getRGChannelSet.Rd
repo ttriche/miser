@@ -4,12 +4,14 @@
 \alias{getRGChannelSet}
 \title{assemble a suitable RGChannelSet for sesamizing}
 \usage{
-getRGChannelSet(subjects = NULL, frags = 1:3)
+getRGChannelSet(subjects = NULL, frags = 1:3, samps = NULL)
 }
 \arguments{
 \item{subjects}{the names of each subject, or NULL to autodetect (NULL)}
 
 \item{frags}{which elements to extract for the array Basename (1:3)}
+
+\item{samps}{targets data.frame (overrides subjects and frags) (NULL)}
 }
 \value{
 \preformatted{       an RGChannelSet with pData $subject and $Basename filled 

@@ -2,7 +2,7 @@ Package: sesamizeGEO
 Type: Package
 Title: some utility functions for digesting (GEO) IDATs with sesame
 Description: this package makes my life less annoying when working off of GEO
-Version: 0.1.9
+Version: 0.1.10
 Date: 2018-10-27
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), 
                     email="tim.triche@gmail.com"))

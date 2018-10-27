@@ -24,12 +24,13 @@ sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, ...){
 
   if (is(subjects, "RGChannelSet")) {
     stopifnot(all(c("subject","Basename") %in% names(colData(subjects))))
-    message("Testing annotations on a subset of columns...") 
+    message("Testing annotations on the first sample...") 
     tmp <- sesamize(subjects[,1]) # will stop() if no annots
+    message("Sesamizing...") 
     res <- sesamask(sesamize(subjects, ...))
   } else { 
     samps <- getSamps(subjects=subjects, frags=frags)
-    message("Testing annotations on a subset of IDATs...") 
+    message("Testing annotations on the first IDAT...") 
     stopifnot(testIDATs(samps, frags)) 
     message("Reading IDATs into a temporary RedGreenChannelSet...") 
     rgSet <- getRGChannelSet(subjects=subjects, frags=frags)

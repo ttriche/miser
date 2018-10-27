@@ -4,6 +4,7 @@
 #' 
 #' @param   subjects  the names of each subject, or NULL to autodetect (NULL)
 #' @param   frags     which elements to extract for the array Basename (1:3)
+#' @param   samps     targets data.frame (overrides subjects and frags) (NULL)
 #' 
 #' @return            an RGChannelSet with pData $subject and $Basename filled 
 #' 
@@ -11,8 +12,9 @@
 #' @import  sesame
 #' 
 #' @export 
-getRGChannelSet <- function(subjects=NULL, frags=1:3) { 
-  samps <- getSamps(subjects=subjects, frags=frags)
+getRGChannelSet <- function(subjects=NULL, frags=1:3, samps=NULL) { 
+  if (is.null(samps)) samps <- getSamps(subjects=subjects, frags=frags)
+  stopifnot(all(c("Basename","subject") %in% names(samps)))
   rgSet <- read.metharray.exp(base=".", targets=samps, verbose=TRUE)
   sampleNames(rgSet) <- rgSet$subject
   return(rgSet) 

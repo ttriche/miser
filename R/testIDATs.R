@@ -9,7 +9,7 @@
 #' 
 #' @export
 testIDATs <- function(samps, elts=1:3) {
-  message("Reading IDATs into temporary RedGreenChannelSet...") 
-  rgSet <- read.metharray.exp(base=".", targets=head(samps, 3), verbose=TRUE)
-  is(sesamize(rgSet), "GenomicRatioSet")
+  rgSet <- read.metharray.exp(base=".", targets=head(samps, 1), verbose=TRUE)
+  if (is(sesamize(rgSet), "GenomicRatioSet")) return(TRUE) 
+  else stop("Could not map samples to genome.")
 } 
