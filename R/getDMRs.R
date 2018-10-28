@@ -39,6 +39,7 @@ getDMRs <- function(x, design=NULL, dropXY=TRUE, impute=TRUE, coef=2, fdr=.05,
   message("Demarcating significant regions...")
   res <- dmrcate(annot, betacutoff=betacutoff, ...) # add parallel processing?
   res$results <- with(res, subset(results, Stouffer < fdr)) # be strict
+  res$DMRs <- extractRanges(res)
 
   # add DMLs?
   if (DMLs) {
