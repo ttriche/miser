@@ -17,6 +17,7 @@
 #' @return                a dmrcate.output object
 #' 
 #' @import DMRcate
+#' @import DMRcatedata
 #'
 #' @export
 getDMRs <- function(x, design=NULL, dropXY=TRUE, impute=TRUE, coef=2, fdr=.05, 
@@ -39,7 +40,7 @@ getDMRs <- function(x, design=NULL, dropXY=TRUE, impute=TRUE, coef=2, fdr=.05,
   message("Demarcating significant regions...")
   res <- dmrcate(annot, betacutoff=betacutoff, ...) # add parallel processing?
   res$results <- with(res, subset(results, Stouffer < fdr)) # be strict
-  res$DMRs <- extractRanges(res)
+  res$DMRs <- extractRanges(res) # hidden dependency on DMRcatedata!
 
   # add DMLs?
   if (DMLs) {
