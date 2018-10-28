@@ -23,7 +23,9 @@ fixNAs <- function(x, na=0.5, sqz=(1 - 1e-6), verbose=TRUE) {
   message("Checking for NAs (this can take quite a while if HDF5-backed)...") 
   DelayedArray:::set_verbose_block_processing(verbose) # why so slow?
   setAutoBlockSize(1e6) # look at million entries at a time
-  t1 <- system.time(naFrac <- rowSums2(is.na(getBeta(x)))/ncol(x))["elapsed"]
+  t1 <- system.time(
+    naFrac <- DelayedMatrixStats::rowSums2(is.na(getBeta(x)))/ncol(x)
+  )["elapsed"]
   if (verbose) message(sprintf("Computed NA fractions in %.1f seconds", t1))
   rowData(x)$naFrac <- naFrac
   if (all(rowData(x)$naFrac == 0)) {
