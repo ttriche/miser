@@ -5,7 +5,7 @@
 \title{use DMRcate to get DMRs (with less hassle)}
 \usage{
 getDMRs(x, design = NULL, dropXY = TRUE, impute = TRUE, coef = 2,
-  fdr = 0.05, betacutoff = 0.1, DMLs = TRUE, ...)
+  fdr = 0.05, betacutoff = 0.1, DMLs = TRUE, parallel = FALSE, ...)
 }
 \arguments{
 \item{x}{a GenomicRatioSet}
@@ -24,6 +24,8 @@ getDMRs(x, design = NULL, dropXY = TRUE, impute = TRUE, coef = 2,
 
 \item{DMLs}{keep raw differentially methylated loci to plot (TRUE)}
 
+\item{parallel}{run in parallel? (often unwise; uses mclapply) (FALSE)}
+
 \item{...}{other arguments to pass to dmrcate}
 }
 \value{
@@ -31,5 +33,6 @@ getDMRs(x, design = NULL, dropXY = TRUE, impute = TRUE, coef = 2,
 }
 }
 \description{
-TODO: run in parallel, especially for HDF5
+This is a convenience wrapper that leaves out much of DMRcate's flexibility.
+If you need that flexibility, you are well advised to use DMRcate directly.
 }

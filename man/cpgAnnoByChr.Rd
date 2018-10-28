@@ -4,7 +4,8 @@
 \alias{cpgAnnoByChr}
 \title{DMRcate doesn't play nicely with HDF5-backed SEs, so I wrote this instead.}
 \usage{
-cpgAnnoByChr(object, design, coef = 2, fdr = 0.05, ...)
+cpgAnnoByChr(object, design, coef = 2, fdr = 0.05, parallel = FALSE,
+  ...)
 }
 \arguments{
 \item{object}{a GenomicRatioSet}
@@ -15,12 +16,14 @@ cpgAnnoByChr(object, design, coef = 2, fdr = 0.05, ...)
 
 \item{fdr}{FDR cutoff (0.05)}
 
+\item{parallel}{run in parallel? (often unwise; uses mclapply) (FALSE)}
+
 \item{...}{other arguments, to be passed (in principle) to DMRcate}
 }
 \value{
-\preformatted{   annotated fits for x and its design matrix
+\preformatted{       annotated fits for x and its design matrix
 }
 }
 \description{
-TODO: run in parallel, especially for HDF5-backed objects.
+DMRcate doesn't play nicely with HDF5-backed SEs, so I wrote this instead.
 }
