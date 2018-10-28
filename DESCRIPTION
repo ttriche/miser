@@ -26,7 +26,8 @@ Imports:
     ComplexHeatmap
 Suggests:
     covr,
-    compartmap,
-    testthat
+    erma, 
+    testthat,
+    compartmap
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)
