@@ -17,7 +17,6 @@
 #' @return                a dmrcate.output object
 #' 
 #' @import DMRcate
-#' @import DMRcatedata
 #'
 #' @export
 getDMRs <- function(x, design=NULL, dropXY=TRUE, impute=TRUE, coef=2, fdr=.05, 
@@ -40,16 +39,19 @@ getDMRs <- function(x, design=NULL, dropXY=TRUE, impute=TRUE, coef=2, fdr=.05,
   message("Demarcating significant regions...")
   res <- dmrcate(annot, betacutoff=betacutoff, ...) # add parallel processing?
   res$results <- with(res, subset(results, Stouffer < fdr)) # be strict
-  res$DMRs <- extractRanges(res) # hidden dependency on DMRcatedata!
+
+  # add DMRs as GRanges (bypass extractRanges)
+  res$DMRs <- as(res$results$coord, "GRanges") 
+  mcols(res$DMRs) <- res$results[, -1]
 
   # add DMLs?
   if (DMLs) {
     sig <- subset(annot$ID, annot$is.sig)
-    DMRloci <- subset(granges(x), rownames(x) %in% sig)
-    m <- match(names(DMRloci), annot$ID)
-    DMRloci$indfdr <- annot$indfdr[m]
-    DMRloci$betafc <- annot$betafc[m]
-    res$DMLs <- DMRloci
+    DMLoci <- subset(granges(x), rownames(x) %in% sig)
+    m <- match(names(DMLoci), annot$ID)
+    DMLoci$indfdr <- annot$indfdr[m]
+    DMLoci$betafc <- annot$betafc[m]
+    res$DMLs <- DMLoci
   }
 
   return(res)

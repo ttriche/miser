@@ -22,7 +22,6 @@ Imports:
     parallel,
     GEOmetadb,
     HDF5Array,
-    DMRcatedata,
     DelayedArray,
     ComplexHeatmap,
     DelayedMatrixStats

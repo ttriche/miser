@@ -4,7 +4,7 @@
 #' 
 #' @return        nothing, just cat the object's various properties
 #' 
-#' @import DMRcate
+#' @import        DMRcate
 #'
 #' @export
 print.dmrcate.output <- function(object) {
