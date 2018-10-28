@@ -4,7 +4,7 @@
 \alias{addCharacteristics}
 \title{get the characteristics of a bunch of GSM entries}
 \usage{
-addCharacteristics(x, column = "subject", titles = FALSE,
+addCharacteristics(x, column = "subject", titles = TRUE,
   cachePath = NULL)
 }
 \arguments{
@@ -12,7 +12,7 @@ addCharacteristics(x, column = "subject", titles = FALSE,
 
 \item{column}{name of the column holding the GSMs ("subject")}
 
-\item{titles}{tack on the titles as well? (FALSE)}
+\item{titles}{tack on the titles as well? (TRUE)}
 
 \item{cachePath}{where to cache the GEOmetadb sqlite file (tempdir())}
 }

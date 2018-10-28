@@ -4,7 +4,7 @@
 #' 
 #' @param   x         either a grSet from sesamizeGEO, or a bunch of GSMs
 #' @param   column    name of the column holding the GSMs ("subject") 
-#' @param   titles    tack on the titles as well? (FALSE)
+#' @param   titles    tack on the titles as well? (TRUE)
 #' @param   cachePath where to cache the GEOmetadb sqlite file (tempdir())
 #'
 #' @return            a grSet, perhaps with additional colData, or a data.frame
@@ -13,7 +13,7 @@
 #' @import  RSQLite
 #' 
 #' @export 
-addCharacteristics <- function(x, column="subject",titles=FALSE,cachePath=NULL){
+addCharacteristics <- function(x, column="subject",titles=TRUE,cachePath=NULL) {
   if (is(x, "GenomicRatioSet")) {
     if (!column %in% names(colData(x))) {
       stop("You need a column named ", column, " in your colData to run this")
