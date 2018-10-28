@@ -1,11 +1,11 @@
 #' use DMRcate to get DMRs (with less hassle) 
 #' 
+#' TODO: run in parallel, especially for HDF5 
+#' 
 #' @param x               a GenomicRatioSet 
 #' @param design          a design matrix (NULL)
 #' @param dropXY          drop sex chromosomes? (TRUE, usually a good idea)
 #' @param impute          impute NAs (TRUE, but beware, this WILL hang on HDF5)
-#' @param contrasts       apply contrasts? (FALSE)
-#' @param cont.matrix     a contrast matrix (NULL) 
 #' @param coef            which column to fit (or "all") (default is 2)
 #' @param fdr             FDR cutoff (0.05)
 #' @param betacutoff      DMRs must have at least this maxbetaFC (0.1)
@@ -17,12 +17,14 @@
 #' @import DMRcate
 #'
 #' @export
-getDMRs <- function(x, design=NULL, dropXY=TRUE, impute=TRUE, contrasts=FALSE, 
-                    cont.matrix=NULL, coef=2, fdr=.05, betacutoff=.1, DMLs=TRUE,
-                    ...) {
+getDMRs <- function(x, design=NULL, dropXY=TRUE, impute=TRUE, coef=2, fdr=.05, 
+                    betacutoff=.1, DMLs=TRUE, ...) {
 
-  if (dropXY & any(c("chrX","chrY") %in% seqlevels(x))) { 
-    message("Dropping sex chromosomes (dropXY is set to TRUE)...") 
+  message("Note: this is a simplified, differential-only version of DMRcate.")
+  message("DMRcate is capable of much more involved analyses. Read its manual.")
+
+  if (dropXY) {
+    message("Dropping sex chromosomes if present (dropXY is set to TRUE)...") 
     x <- keepSeqlevels(x, paste0("chr", 1:22), pruning.mode="coarse")
   }
   
@@ -30,12 +32,10 @@ getDMRs <- function(x, design=NULL, dropXY=TRUE, impute=TRUE, contrasts=FALSE,
   if (impute) x <- fixNAs(x) # the alternative is to fail...
 
   message("Annotating individual CpGs...")
-  annot <- cpg.annotate(datatype="array", x, coef=coef, 
-                        design=design, contrasts=contrasts, 
-                        cont.matrix=cont.matrix, fdr=fdr)
+  annot <- cpgAnnoByChr(subset(object, rowData(object)$mask == FALSE), 
+                        design=design, coef=coef, fdr=fdr)
   message("Demarcating significant regions...")
   res <- dmrcate(annot, betacutoff=betacutoff, ...) 
-  res$granges <- extractRanges(res, genome=unique(genome(x)))
   if (DMLs) res$DMLs <- annot
   return(res)
 

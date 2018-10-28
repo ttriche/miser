@@ -4,9 +4,8 @@
 \alias{getDMRs}
 \title{use DMRcate to get DMRs (with less hassle)}
 \usage{
-getDMRs(x, design = NULL, dropXY = TRUE, impute = TRUE,
-  contrasts = FALSE, cont.matrix = NULL, coef = 2, fdr = 0.05,
-  betacutoff = 0.1, DMLs = TRUE, ...)
+getDMRs(x, design = NULL, dropXY = TRUE, impute = TRUE, coef = 2,
+  fdr = 0.05, betacutoff = 0.1, DMLs = TRUE, ...)
 }
 \arguments{
 \item{x}{a GenomicRatioSet}
@@ -16,10 +15,6 @@ getDMRs(x, design = NULL, dropXY = TRUE, impute = TRUE,
 \item{dropXY}{drop sex chromosomes? (TRUE, usually a good idea)}
 
 \item{impute}{impute NAs (TRUE, but beware, this WILL hang on HDF5)}
-
-\item{contrasts}{apply contrasts? (FALSE)}
-
-\item{cont.matrix}{a contrast matrix (NULL)}
 
 \item{coef}{which column to fit (or "all") (default is 2)}
 
@@ -36,5 +31,5 @@ getDMRs(x, design = NULL, dropXY = TRUE, impute = TRUE,
 }
 }
 \description{
-use DMRcate to get DMRs (with less hassle)
+TODO: run in parallel, especially for HDF5
 }

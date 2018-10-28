@@ -1,5 +1,7 @@
 #' idiotically simple masking and imputation for sesamized methylation data 
-#' 
+#'
+#' TODO: parallelize for HDF5-backed instances instead of running blockwise 
+#'
 #' @param x       a GenomicRatioSet
 #' @param na      probes with this proportion NA (or higher) are dropped (0.5)
 #' @param sqz     a squeeze factor to regularize imputation (1-1e-6 by default) 
@@ -18,7 +20,7 @@ fixNAs <- function(x, na=0.5, sqz=(1 - 1e-6), verbose=TRUE) {
   stopifnot("mask" %in% names(rowData(x)))
   x <- subset(x, !rowData(x)$mask)
   
-  message("Checking for NAs (this can take a LONG time if HDF5-backed)...") 
+  message("Checking for NAs (this can take quite a while if HDF5-backed)...") 
   DelayedArray:::set_verbose_block_processing(verbose) # why so slow?
   setAutoBlockSize(1e6) # look at million entries at a time
   t1 <- system.time(naFrac <- rowSums2(is.na(getBeta(x)))/ncol(x))["elapsed"]

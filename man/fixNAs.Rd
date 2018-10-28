@@ -19,5 +19,5 @@ fixNAs(x, na = 0.5, sqz = (1 - 1e-06), verbose = TRUE)
 a GenomicRatioSet with masked probes dropped and NAs imputed
 }
 \description{
-idiotically simple masking and imputation for sesamized methylation data
+TODO: parallelize for HDF5-backed instances instead of running blockwise
 }

@@ -2,8 +2,8 @@ Package: sesamizeGEO
 Type: Package
 Title: some utility functions for digesting (GEO) IDATs with sesame
 Description: this package makes my life less annoying when working off of GEO
-Version: 0.1.16
-Date: 2018-10-27
+Version: 0.1.18
+Date: 2018-10-28
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), 
                     email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]
@@ -16,6 +16,7 @@ Depends:
     R (>= 3.0.0),
     DelayedMatrixStats
 Imports:
+    limma,
     sesame,
     DMRcate,
     RSQLite, 
