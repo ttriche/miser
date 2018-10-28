@@ -30,10 +30,10 @@ getDMRs <- function(x, design=NULL, dropXY=TRUE, impute=TRUE, coef=2, fdr=.05,
   
   # try and avoid hanging with HDF5-backed SummarizedExperiments
   if (impute) x <- fixNAs(x) # the alternative is to fail...
+  x <- subset(x, !rowData(x)$mask)
 
   message("Annotating individual CpGs...")
-  annot <- cpgAnnoByChr(subset(object, rowData(object)$mask == FALSE), 
-                        design=design, coef=coef, fdr=fdr)
+  annot <- cpgAnnoByChr(x, design=design, coef=coef, fdr=fdr)
   message("Demarcating significant regions...")
   res <- dmrcate(annot, betacutoff=betacutoff, ...) 
   if (DMLs) res$DMLs <- annot
