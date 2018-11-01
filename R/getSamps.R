@@ -7,12 +7,19 @@
 #' 
 #' @export 
 getSamps <- function(subjects=NULL, frags=1:3) { 
-  basenames <- unique(elts(list.files(patt="*idat*"), z=frags))
-  samps <- data.frame(Basename=basenames)
-  if (is.null(subjects)) {
-    samps$subject <- elts(samps$Basename)
+  # short circuit all of this if the subjects are a list of IDATs:
+  if (all(grepl("idat", ignore.case=TRUE, subjects))) { 
+    # a list of IDATs; don't screw around with anything else
+    samps <- data.frame(Basename=unique(elts(subjects, z=frags)),
+                        subject=unique(elts(subjects)))
   } else { 
-    stopifnot(identical(names(subjects), samps$Basename))
+    basenames <- unique(elts(list.files(patt="*idat*"), z=frags))
+    samps <- data.frame(Basename=basenames)
+    if (is.null(subjects)) {
+      samps$subject <- elts(samps$Basename)
+    } else { 
+      stopifnot(identical(names(subjects), samps$Basename))
+    }
   }
   return(samps)
 }

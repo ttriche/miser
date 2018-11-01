@@ -12,6 +12,7 @@
 #' @param   frags     which elements to extract for the array Basename (1:3)
 #' @param   annot     look up the titles and characteristics for GSMs? (FALSE)
 #' @param   HDF5      EXPERIMENTAL: make the grSet HDF5-backed? (FALSE)
+#' @param   cachePath where to cache the GEOmetadb sqlite file (tempdir())
 #' @param   ...       more arguments to pass on to sesamize
 #'
 #' @return            a GenomicRatioSet with metadata(grSet)$SNPs filled out
@@ -21,7 +22,8 @@
 #' @import  rhdf5 
 #' 
 #' @export 
-sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, ...){
+sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, 
+                        cachePath=NULL, ...){
 
   # baby steps towards out-of-core processing
   if (HDF5) setRealizationBackend("HDF5Array") 
@@ -32,7 +34,10 @@ sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, ...){
     message("Sesamizing...") 
     res <- sesamize(subjects, ...)
   } else { 
-    samps <- getSamps(subjects=subjects, frags=frags)
+    if (all(grepl("idat", ignore.case=TRUE, subjects))) {
+    } else { 
+      samps <- getSamps(subjects=subjects, frags=frags)
+    }
     message("Testing annotations on the first few IDATs...") 
     stopifnot(testIDATs(samps, frags)) 
     message("Reading IDATs into a temporary RedGreenChannelSet...") 
@@ -40,7 +45,7 @@ sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE, ...){
     message("Sesamizing...") 
     res <- sesamize(rgSet, ...)
   }
-  if (annot) res <- addTitles(addCharacteristics(res))
+  if (annot) res <- addCharacteristics(res, cachePath=cachePath)
   res <- sesamask(res) # add explicit probe mask 
   if (HDF5) message("HDF5 realization used; you will need to use saveAsHDF5.") 
   return(res)
