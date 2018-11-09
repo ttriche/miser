@@ -9,14 +9,15 @@
 #'
 #' This function selects the k most extremal rows of x and returns their values.
 #'
-#' TODO: operate in parallel when working on an HDF5-backed object instead of matrix.
+#' TODO: operate in parallel when working on an HDF5-backed object
 #'
-#' @param     x   a matrix of beta values
+#' @param     x   a matrix of beta values, or a GenomicRatioSet
 #' @param     k   how many rows to return (500)
 #' 
-#' @return    a smaller matrix (usually) than x, ranked by extremality 
+#' @return    the most extremal _k_ rows of _x_ (returns the same class as _x_)
 #' 
 #' @import    matrixStats
+#' @import    DelayedMatrixStats
 #' 
 #' @export
 byExtremality <- function(x, k=500) {
@@ -25,9 +26,16 @@ byExtremality <- function(x, k=500) {
   x[rev(order(extremality))[seq_len(k)], ]
 }
 
+# helper fn
 .extremality <- function(x) {
-  means <- rowMeans(x, na.rm=TRUE)
-  bernoulliSd <- sqrt(means * (1 - means))
-  actualSd <- rowSds(x, na.rm=TRUE)
-  return(actualSd / bernoulliSd)
+  if (is(x, "GenomicRatioSet")) {
+    DelayedArray:::set_verbose_block_processing(TRUE) 
+    setAutoBlockSize(1e6) # look at million entries at a time
+    .extremality(getBeta(x))
+  } else { 
+    means <- DelayedMatrixStats::rowMeans2(x, na.rm=TRUE)
+    bernoulliSd <- sqrt(means * (1 - means))
+    actualSd <- DelayedMatrixStats::rowSds(x, na.rm=TRUE)
+    return(actualSd / bernoulliSd)
+  }
 }

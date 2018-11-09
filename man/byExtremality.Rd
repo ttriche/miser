@@ -8,12 +8,12 @@ we can do better (a lot better) than MAD.  Since we know that}
 byExtremality(x, k = 500)
 }
 \arguments{
-\item{x}{a matrix of beta values}
+\item{x}{a matrix of beta values, or a GenomicRatioSet}
 
 \item{k}{how many rows to return (500)}
 }
 \value{
-a smaller matrix (usually) than x, ranked by extremality
+the most extremal \emph{k} rows of \emph{x} (returns the same class as \emph{x})
 }
 \description{
 max(SD(X_j)) if X_j ~ Beta(a, b) < max(SD(X_j)) if X_j ~ Bernoulli(a/(a+b))
@@ -25,5 +25,5 @@ extremality = sd(X_j) / bernoulliSD(mean(X_j))
 
 This function selects the k most extremal rows of x and returns their values.
 
-TODO: operate in parallel when working on an HDF5-backed object instead of matrix.
+TODO: operate in parallel when working on an HDF5-backed object
 }
