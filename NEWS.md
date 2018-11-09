@@ -1,3 +1,3 @@
-## sesamizeGEO 0.1.0
+## miser 0.3.3
 
 * Initial addition of functions and tests

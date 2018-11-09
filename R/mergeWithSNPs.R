@@ -19,7 +19,7 @@ mergeWithSNPs <- function(x, y) {
   colData(x) <- colData(x)[, matchingColData]
   colData(y) <- colData(y)[, matchingColData]
   z <- cbind(x[matchingRows,], y[matchingRows,])
-  metadata(z) <- NULL 
+  metadata(z) <- list() 
   metadata(z)$SNPs <- cbind(xSNP[matchingSNPs,], ySNP[matchingSNPs,])
   return(z) 
 }
