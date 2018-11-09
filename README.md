@@ -10,8 +10,8 @@ library(miser)
 
 # in a clean new directory...
 GSMs <- paste0("GSM230915", 4:7)
-IDATs <- getGSMs(GSMs) 
-grSet <- sesamizeGEO(IDATs, annot=TRUE, HDF5=TRUE)
+IDATs <- getGSMs(GSMs, cachePath=".") # downloads metadata here 
+grSet <- sesamizeGEO(IDATs, annot=TRUE, HDF5=TRUE, cachePath=".")
 colData(grSet) # autopopulated from GEOmetadb when annot=TRUE
 ```
 

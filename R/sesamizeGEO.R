@@ -34,10 +34,7 @@ sesamizeGEO <- function(subjects=NULL, frags=1:3, annot=FALSE, HDF5=FALSE,
     message("Sesamizing...") 
     res <- sesamize(subjects, ...)
   } else { 
-    if (all(grepl("idat", ignore.case=TRUE, subjects))) {
-    } else { 
-      samps <- getSamps(subjects=subjects, frags=frags)
-    }
+    samps <- getSamps(subjects=subjects, frags=frags)
     message("Testing annotations on the first few IDATs...") 
     stopifnot(testIDATs(samps, frags)) 
     message("Reading IDATs into a temporary RedGreenChannelSet...") 

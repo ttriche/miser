@@ -2,8 +2,8 @@ Package: miser
 Type: Package
 Title: some utility functions for digesting (GEO) IDATs with sesame
 Description: this package makes my life less annoying when working off of GEO
-Version: 0.3.33
-Date: 2018-11-02
+Version: 0.3.4
+Date: 2018-11-09
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), 
                     email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]
