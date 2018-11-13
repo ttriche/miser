@@ -4,10 +4,14 @@
 \alias{plotSNPs}
 \title{another oldie but goodie}
 \usage{
-plotSNPs(x)
+plotSNPs(x, rotate = FALSE, ...)
 }
 \arguments{
 \item{x}{a grSet with SNPs in its metadata()}
+
+\item{rotate}{rotate the subjects onto the side? (FALSE)}
+
+\item{...}{other arguments passed on to Heatmap}
 }
 \description{
 plot SNPs living in metadata(x)$SNPs, provided they match sampleNames(x)
