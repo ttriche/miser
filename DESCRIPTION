@@ -1,9 +1,9 @@
 Package: miser
 Type: Package
-Title: some utility functions for digesting (GEO) IDATs with sesame
+Title: the poor man's methylation suite (cf. `sesamizer`)
 Description: this package makes my life less annoying when working off of GEO
-Version: 0.3.6
-Date: 2018-11-13
+Version: 0.3.7
+Date: 2018-11-16
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), 
                     email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]

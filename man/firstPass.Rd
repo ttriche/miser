@@ -11,10 +11,6 @@ firstPass(x, k = 500, ...)
 
 \item{k}{how many features to keep (max)}
 }
-\value{
-\preformatted{ a Heatmap object from ComplexHeatmap 
-}
-}
 \description{
 plot heatmap, remind user to check SNPs
 }

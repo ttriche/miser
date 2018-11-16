@@ -3,8 +3,6 @@
 #' @param   x   a grSet
 #' @param   k   how many features to keep (max)
 #' 
-#' @return      a Heatmap object from ComplexHeatmap 
-#' 
 #' @import      ComplexHeatmap 
 #' 
 #' @export

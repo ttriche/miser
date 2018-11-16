@@ -11,15 +11,11 @@
 mergeWithSNPs <- function(x, y) { 
   stopifnot(is(x, "GenomicRatioSet"))
   stopifnot(is(y, "GenomicRatioSet"))
+  z <- mergeMeth(x, y)
+  metadata(z) <- list() 
   xSNP <- metadata(x)$SNPs[, colnames(x)] 
   ySNP <- metadata(y)$SNPs[, colnames(y)] 
-  matchingRows <- intersect(rownames(x), rownames(y))
   matchingSNPs <- intersect(rownames(xSNP), rownames(ySNP))
-  matchingColData <- intersect(names(colData(x)), names(colData(y)))
-  colData(x) <- colData(x)[, matchingColData]
-  colData(y) <- colData(y)[, matchingColData]
-  z <- cbind(x[matchingRows,], y[matchingRows,])
-  metadata(z) <- list() 
   metadata(z)$SNPs <- cbind(xSNP[matchingSNPs,], ySNP[matchingSNPs,])
   return(z) 
 }
