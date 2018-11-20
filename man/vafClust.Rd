@@ -4,16 +4,16 @@
 \alias{vafClust}
 \title{punishingly simple VAF clustering for clonality estimation}
 \usage{
-vafClust(VAF, eps, depth = NULL, ...)
+vafClust(alt, ref, depth = NULL, ...)
 }
 \arguments{
-\item{VAF}{a matrix of variant allele frequencies}
+\item{alt}{read depth for the variant allele}
 
-\item{eps}{value of epsilon for DBSCAN (?dbscan)}
-
-\item{depth}{optional matrix of read depths for VAFs}
+\item{ref}{read depth for the reference allele}
 
 \item{...}{additional arguments to pass on to dbscan}
+
+\item{eps}{epsilon to use for DBSCAN clustering}
 }
 \value{
 \preformatted{   an object of class `dbscan_fast`

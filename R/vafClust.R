@@ -14,9 +14,9 @@
 #' Given a vector or matrix of VAFs, this function clusters them
 #' using dbscan, with log10(read_depth) as the weight for each VAF.
 #' 
-#' @param   VAF   a matrix of variant allele frequencies
-#' @param   eps   value of epsilon for DBSCAN (?dbscan)
-#' @param   depth optional matrix of read depths for VAFs
+#' @param   alt   read depth for the variant allele 
+#' @param   ref   read depth for the reference allele 
+#' @param   eps   epsilon to use for DBSCAN clustering 
 #' @param   ...   additional arguments to pass on to dbscan 
 #' 
 #' @return        an object of class `dbscan_fast`
@@ -24,10 +24,11 @@
 #' @import dbscan
 #'
 #' @export
-vafClust <- function(VAF, eps, depth=NULL, ...) { 
+vafClust <- function(alt, ref, depth=NULL, ...) { 
  
-  if (is.null(depth)) depth <- matrix(10, nrow=nrow(VAF), ncol=ncol(VAF)) 
-  stopifnot(identical(dim(VAF), dim(depth)))
-  dbscan::dbscan(x=flogit(VAF), eps=eps, weights=log10(depth), ...)
+  stopifnot(identical(dim(alt), dim(ref)))
+  total <- alt + ref
+  VAF <- alt / total 
+  dbscan::dbscan(x=flogit(VAF), eps=eps, weights=log10(total), ...)
 
 }
