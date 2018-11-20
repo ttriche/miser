@@ -7,7 +7,7 @@
 firstPass(x, k = 500, ...)
 }
 \arguments{
-\item{x}{a grSet}
+\item{x}{a grSet or matrix of beta values}
 
 \item{k}{how many features to keep (max)}
 }
