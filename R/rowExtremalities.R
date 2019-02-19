@@ -15,10 +15,12 @@ rowExtremalities <- function(x) {
     x <- getBeta(x)
   } 
   DelayedArray:::set_verbose_block_processing(TRUE) 
-  setAutoBlockSize(1e6) # look at million entries at a time
+  setAutoBlockSize(1e9) # look at billion entries at a time
   means <- DelayedMatrixStats::rowMeans2(x, na.rm=TRUE)
   actualSd <- DelayedMatrixStats::rowSds(x, na.rm=TRUE)
   bernoulliSd <- sqrt(means * (1 - means))
   # practical fix for numerical instability:
-  return(actualSd / pmax(bernoulliSd, actualSd)) 
+  res <- (actualSd / pmax(bernoulliSd, actualSd)) 
+  names(res) <- rownames(x)
+  return(res)
 }
