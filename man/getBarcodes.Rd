@@ -4,12 +4,12 @@
 \alias{getBarcodes}
 \title{retrieve all the IDAT Basenames in a directory}
 \usage{
-getBarcodes(dir = ".", z = 1:2, ...)
+getBarcodes(dir = ".", elt = 1:2, ...)
 }
 \arguments{
 \item{dir}{the path to the directory (default: use ".", the current path)}
 
-\item{z}{which fragments to use as the barcode (default: 1 and 2)}
+\item{elt}{which fragment\link{s} to use as the barcode (default: 1 and 2)}
 
 \item{...}{other arguments to pass to elts()}
 }

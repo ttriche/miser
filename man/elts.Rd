@@ -4,19 +4,19 @@
 \alias{elts}
 \title{get elements from a consistently separated character string}
 \usage{
-elts(x, y = "_", z = 1, naify = FALSE)
+elts(x, sep = "_", elt = 1, naify = FALSE)
 }
 \arguments{
-\item{x}{the string}
+\item{x}{the string(s) to split}
 
-\item{y}{the separator}
+\item{sep}{the separator (default is "_")}
 
-\item{z}{the element\link{s} to get}
+\item{elt}{the element\link{s} to get (default is element 1)}
 
 \item{naify}{return NA_character_ if y is not present? (FALSE)}
 }
 \value{
-\preformatted{   a string, joined by the separator if z is a vector
+\preformatted{   a string, joined by `sep` if `elt` is a vector
 }
 }
 \description{
@@ -26,9 +26,9 @@ Another function that I keep rewriting; no more!
 
 string <- "foo_123_bar.baz.qux"
 
-elts(string)               # [1] "foo" 
-elts(string, z=2:3)        # [1] "123_bar.baz.qux"
-elts(string, y=".", z=2:3) # [1] "baz.qux"
+elts(string)                     # [1] "foo" 
+elts(string, elts=2:3)           # [1] "123_bar.baz.qux"
+elts(string, sep=".", elts=2:3)  # [1] "baz.qux"
 
 strings <- paste0(letters[1:3], "_string")
 

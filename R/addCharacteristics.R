@@ -35,8 +35,8 @@ addCharacteristics <- function(x, column="subject",titles=TRUE,cachePath=NULL) {
   rownames(res) <- res$gsm
   if (!all(GSMs %in% res$gsm)) stop("Missing records! Aborting.")
   toParse <- res[GSMs, "characteristics_ch1"]
-  parsed <- do.call(rbind, lapply(strsplit(toParse, ";\t"), elts, y=": ", 2))
-  colnames(parsed) <- sapply(strsplit(toParse[1], ";\t")[[1]], elts, y=":")
+  parsed <- do.call(rbind, lapply(strsplit(toParse,";\t"), elts,sep=": ",elt=2))
+  colnames(parsed) <- sapply(strsplit(toParse[1], ";\t")[[1]], elts, sep=":")
   rownames(parsed) <- GSMs
   parsed <- as.data.frame(parsed)
   if (titles) parsed$title <- addTitles(GSMs)

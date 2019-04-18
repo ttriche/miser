@@ -4,12 +4,12 @@
 \alias{testIDATs}
 \title{make sure annotations and so forth are in place before doing a big run...}
 \usage{
-testIDATs(samps, elts = 1:3)
+testIDATs(samps, ...)
 }
 \arguments{
 \item{samps}{two or more rows of the \code{samps} data.frame with \code{Basename}}
 
-\item{elts}{which elements to extract for the array Basename (1:3)}
+\item{...}{other arguments, currently unused}
 }
 \value{
 \preformatted{     the status of an attempt to annotate those IDATs 
