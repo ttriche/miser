@@ -4,8 +4,18 @@
 \alias{getDMRs}
 \title{use DMRcate to get DMRs (with less hassle)}
 \usage{
-getDMRs(x, design = NULL, dropXY = TRUE, impute = TRUE, coef = 2,
-  fdr = 0.05, betacutoff = 0.1, DMLs = TRUE, parallel = FALSE, ...)
+getDMRs(
+  x,
+  design = NULL,
+  dropXY = TRUE,
+  impute = TRUE,
+  coef = 2,
+  fdr = 0.05,
+  betacutoff = 0.1,
+  DMLs = TRUE,
+  parallel = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a GenomicRatioSet}

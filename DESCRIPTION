@@ -2,8 +2,8 @@ Package: miser
 Type: Package
 Title: the poor man's methylation suite (cf. `sesamizer`)
 Description: this package makes my life less annoying when working off of GEO
-Version: 0.5.5
-Date: 2019-04-18
+Version: 0.5.10
+Date: 2020-10-23
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), 
                     email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]
@@ -31,5 +31,5 @@ Suggests:
     erma, 
     testthat,
     compartmap
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)

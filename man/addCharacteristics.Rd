@@ -4,8 +4,7 @@
 \alias{addCharacteristics}
 \title{get the characteristics of a bunch of GSM entries}
 \usage{
-addCharacteristics(x, column = "subject", titles = TRUE,
-  cachePath = NULL)
+addCharacteristics(x, column = "subject", titles = TRUE, cachePath = NULL)
 }
 \arguments{
 \item{x}{either a grSet from sesamizeGEO, or a bunch of GSMs}

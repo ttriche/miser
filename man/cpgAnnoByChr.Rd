@@ -4,8 +4,7 @@
 \alias{cpgAnnoByChr}
 \title{DMRcate doesn't play nicely with HDF5-backed SEs, so I wrote this instead.}
 \usage{
-cpgAnnoByChr(object, design, coef = 2, fdr = 0.05, parallel = FALSE,
-  ...)
+cpgAnnoByChr(object, design, coef = 2, fdr = 0.05, parallel = FALSE, ...)
 }
 \arguments{
 \item{object}{a GenomicRatioSet}

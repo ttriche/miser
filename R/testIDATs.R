@@ -9,7 +9,7 @@
 #' 
 #' @export
 testIDATs <- function(samps, ...) { 
-  rgSet <- read.metharray.exp(base=".", targets=samps[1:2,])
+  rgSet <- read.metharray.exp(base=".", targets=samps[1:2, , drop=FALSE])
   colnames(rgSet) <- rgSet$subject
   res <- sesamize(rgSet)
   is(res, "GenomicRatioSet")

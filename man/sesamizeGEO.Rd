@@ -4,8 +4,14 @@
 \alias{sesamizeGEO}
 \title{sesamize a bunch of IDATs from GEO (or anywhere else with sensible names)}
 \usage{
-sesamizeGEO(subjects = NULL, frags = 1:3, annot = FALSE,
-  HDF5 = FALSE, cachePath = NULL, ...)
+sesamizeGEO(
+  subjects = NULL,
+  frags = 1:3,
+  annot = FALSE,
+  HDF5 = FALSE,
+  cachePath = NULL,
+  ...
+)
 }
 \arguments{
 \item{subjects}{the names of each subject, or an rgSet (autodetect)}
