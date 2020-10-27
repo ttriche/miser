@@ -8,7 +8,7 @@
 #' @export 
 getSamps <- function(subjects=NULL, frags=1:3) { 
   # short circuit all of this if the subjects are a list of IDATs:
-  if (!is.nul(subjects) & all(grepl("idat", ignore.case=TRUE, subjects))) { 
+  if (!is.null(subjects) & all(grepl("idat", ignore.case=TRUE, subjects))) { 
     # a list of IDATs; don't screw around with anything else
     samps <- data.frame(Basename=unique(elts(subjects, elt=frags)),
                         subject=unique(elts(subjects)))
