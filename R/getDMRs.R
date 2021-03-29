@@ -36,6 +36,8 @@ getDMRs <- function(x, design=NULL, dropXY=TRUE, impute=TRUE, coef=2, fdr=.05,
 
   message("Annotating individual CpGs...")
   annot <- cpgAnnoByChr(x, design=design, coef=coef, fdr=fdr, parallel=parallel)
+  class(annot) <- union(class(annot), "CpGannotated") # for DMRcate
+    
   message("Demarcating significant regions...")
   res <- dmrcate(annot, betacutoff=betacutoff, ...) # add parallel processing?
   res$results <- with(res, subset(results, Stouffer < fdr)) # be strict
