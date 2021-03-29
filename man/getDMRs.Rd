@@ -6,13 +6,13 @@
 \usage{
 getDMRs(
   x,
-  design = NULL,
+  design,
   dropXY = TRUE,
-  impute = TRUE,
+  impute = FALSE,
   coef = 2,
   fdr = 0.05,
   betacutoff = 0.1,
-  DMLs = TRUE,
+  DMLs = FALSE,
   parallel = FALSE,
   ...
 )
@@ -20,26 +20,20 @@ getDMRs(
 \arguments{
 \item{x}{a GenomicRatioSet}
 
-\item{design}{a design matrix (NULL)}
+\item{design}{a design matrix}
 
 \item{dropXY}{drop sex chromosomes? (TRUE, usually a good idea)}
 
-\item{impute}{impute NAs (TRUE, but beware, this WILL hang on HDF5)}
+\item{impute}{impute NAs (FALSE; this will hang on HDF5 if TRUE)}
 
-\item{coef}{which column to fit (or "all") (default is 2)}
-
-\item{fdr}{FDR cutoff (0.05)}
+\item{coef}{which column to fit (default is 2)}
 
 \item{betacutoff}{DMRs must have at least this maxbetaFC (0.1)}
 
-\item{DMLs}{keep raw differentially methylated loci to plot (TRUE)}
-
-\item{parallel}{run in parallel? (often unwise; uses mclapply) (FALSE)}
-
-\item{...}{other arguments to pass to dmrcate}
+\item{...}{other arguments to pass to DMRcate::cpg.annotate}
 }
 \value{
-\preformatted{           a dmrcate.output object
+\preformatted{           tidied output from DMRcate::dmrcate
 }
 }
 \description{
