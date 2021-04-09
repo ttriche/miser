@@ -8,7 +8,8 @@
 #' @param dropXY          drop sex chromosomes? (TRUE, usually a good idea)
 #' @param impute          impute NAs (FALSE; this will hang on HDF5 if TRUE)
 #' @param coef            which column to fit (default is 2)
-#' @param betacutoff      DMRs must have at least this maxbetaFC (0.1)
+#' @param betacutoff      DMRs must have at least this maxbetaFC (0.05)
+#' @param min.cpgs        DMRs must have at least this maxbetaFC (2)
 #' @param ...             other arguments to pass to DMRcate::cpg.annotate
 #' 
 #' @return                tidied output from DMRcate::dmrcate
@@ -17,7 +18,7 @@
 #'
 #' @export
 getDMRs <- function(x, design, dropXY=TRUE, impute=FALSE, coef=2, fdr=.05, 
-                    betacutoff=.1, DMLs=FALSE, parallel=FALSE, ...) {
+                    betacutoff=.05, min.cpgs=2, ...) {
 
   message("Note: this is a simplified, differential-only version of DMRcate.")
   message("DMRcate is capable of much more involved analyses. Read its manual.")

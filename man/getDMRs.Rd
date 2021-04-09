@@ -11,9 +11,8 @@ getDMRs(
   impute = FALSE,
   coef = 2,
   fdr = 0.05,
-  betacutoff = 0.1,
-  DMLs = FALSE,
-  parallel = FALSE,
+  betacutoff = 0.05,
+  min.cpgs = 2,
   ...
 )
 }
@@ -28,7 +27,9 @@ getDMRs(
 
 \item{coef}{which column to fit (default is 2)}
 
-\item{betacutoff}{DMRs must have at least this maxbetaFC (0.1)}
+\item{betacutoff}{DMRs must have at least this maxbetaFC (0.05)}
+
+\item{min.cpgs}{DMRs must have at least this maxbetaFC (2)}
 
 \item{...}{other arguments to pass to DMRcate::cpg.annotate}
 }
