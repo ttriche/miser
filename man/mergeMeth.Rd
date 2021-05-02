@@ -4,16 +4,23 @@
 \alias{mergeMeth}
 \title{helper function to merge grSets}
 \usage{
-mergeMeth(x, y)
+mergeMeth(x, y, verbose = TRUE)
 }
 \arguments{
 \item{x}{a GenomicRatioSet}
 
 \item{y}{another GenomicRatioSet}
+
+\item{verbose}{be verbose? (TRUE)}
 }
 \value{
-a GenomicRatioSet combining the two
+\preformatted{   a GenomicRatioSet combining the two
+}
 }
 \description{
 helper function to merge grSets
+}
+\examples{
+# merged <- Reduce(mergeMeth, list(grs1, grs2, grs3))
+
 }
