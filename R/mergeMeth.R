@@ -44,10 +44,15 @@ mergeMeth <- function(x, y, verbose=TRUE) {
  
   # metadata/SNP weirdness fix 
   if ("SNPs" %in% names(metadata(x)) & "SNPs" %in% names(metadata(y))) {
-    SNPs <- cbind(metadata(x)$SNPs[, colnames(x)], 
-                  metadata(y)$SNPs[, colnames(y)])
-    metadata(res) <- metadata(res)[names(metadata(res)) != "SNPs"]
-    metadata(res)$SNPs <- SNPs # yes this is bizarre, yes it is needed
+    if (all(colnames(x) %in% colnames(metadata(x)$SNPs)) & 
+        all(colnames(y) %in% colnames(metadata(y)$SNPs))) {
+      SNPs <- cbind(metadata(x)$SNPs[, colnames(x)], 
+                    metadata(y)$SNPs[, colnames(y)])
+      metadata(res) <- metadata(res)[names(metadata(res)) != "SNPs"]
+      metadata(res)$SNPs <- SNPs # yes this is bizarre, yes it is needed
+    } else { 
+      message("Missing colnames in metadata(.)$SNPs -- skipping merge.")
+    }
   }
 
   return(res)
