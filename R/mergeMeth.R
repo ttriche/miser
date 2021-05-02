@@ -23,7 +23,7 @@ mergeMeth <- function(x, y, verbose=TRUE) {
   if (length(matchingAssays) < 1) stop("No matching assays found.")
   if (verbose) message(length(matchingAssays), " assays matched.")
   assays(x) <- assays(x)[matchingAssays]
-  assays(y) <- assays(x)[matchingAssays]
+  assays(y) <- assays(y)[matchingAssays]
 
   # probes 
   matchingRows <- intersect(rownames(x), rownames(y))
