@@ -30,17 +30,6 @@ getGSMs <- function(GSMs, cachePath=NULL) {
   numfiles <- length(IDATs)
   numGSMs <- length(GSMs)
   if ((numfiles/numGSMs) < 2) message("Some samples have no IDATs to fetch.") 
-  getIDAT <- function(IDAT) {
-    fname <- basename(IDAT)
-    if (fname %in% list.files()) {
-      message("Found ", fname, " locally; skipping download.") 
-    } else { 
-      message("Downloading ", fname, " from ", IDAT, "...", appendLF=FALSE)
-      download.file(IDAT, fname) 
-      message("done.")
-    }
-    return(fname)
-  }
   fnames <- sapply(IDATs, getIDAT)
   invisible(fnames)
 
