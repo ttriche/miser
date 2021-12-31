@@ -13,7 +13,7 @@ getSamps <- function(subjects=NULL, frags=1:3) {
     samps <- data.frame(Basename=unique(elts(subjects, elt=frags)),
                         subject=unique(elts(subjects)))
   } else { 
-    basenames <- unique(elts(list.files(patt="*idat*"), elt=frags))
+    basenames <- unique(elts(list.files(patt="idat"), elt=frags))
     samps <- data.frame(Basename=basenames)
     if (is.null(subjects)) {
       samps$subject <- elts(samps$Basename, 1)
