@@ -7,10 +7,10 @@
 flag_control_failures(rmat, dft = NULL)
 }
 \arguments{
-\item{dft}{optional threshold data.frame; defaults will be used if null}
-
-\item{x}{return matrix from control_metrics(...), N rows by M cols, or
+\item{rmat}{return matrix from control_metrics(...), N rows by M cols, or
 an RGChannelSet (in which case control_metrics(x) will be run)}
+
+\item{dft}{optional threshold data.frame; defaults will be used if null}
 }
 \value{
 \preformatted{ an NxM matrix of threshold assessments, 0 = pass, 1 = fail
