@@ -18,7 +18,7 @@ flag_control_failures <- function(rmat, dft=NULL) {
 
   fails <- rmat
   if (is.null(dft)) dft <- .get_dft()
-  for (i in colnames(rmat)[-1]) fails[, i] <- as.numeric(rmat[, i] < dft[, i])
+  for (i in colnames(rmat)) fails[, i] <- as.numeric(rmat[, i] < dft[, i])
   return(fails)
 
 }
