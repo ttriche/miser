@@ -4,13 +4,15 @@
 \alias{flag_control_failures}
 \title{get control quality assessments from an object returned by \code{bactrl}}
 \usage{
-flag_control_failures(rmat, dft = NULL)
+flag_control_failures(rmat, dft = NULL, platform = "epic")
 }
 \arguments{
-\item{rmat}{return matrix from control_metrics(...), N rows by M cols, or
-an RGChannelSet (in which case control_metrics(x) will be run)}
+\item{rmat}{return matrix from control_metrics(), N rows by M cols, or
+RGChannelSet (in which case control_metrics() will be run)}
 
 \item{dft}{optional threshold data.frame; defaults will be used if null}
+
+\item{platform}{optional platform indicator; will detect if rgSet ("EPIC")}
 }
 \value{
 \preformatted{ an NxM matrix of threshold assessments, 0 = pass, 1 = fail
@@ -20,4 +22,14 @@ an RGChannelSet (in which case control_metrics(x) will be run)}
 Apply BeadArray thresholds for quality flagging. Thresholds obtained from
 the BeadArray Controls Reporter Software Guide (v00, source 2) and ewastools
 resource (v1.5, source 3).
+}
+\details{
+Every single EPIC IDAT that we have seen fails nonpolymorphic.grn and 99.5\%
+of EPIC arrays fail bisulfite.conv.I.grn, so we mask these (for now) on EPIC.
+Zhou, Laird, and Shen (NAR 2017) document additional reasons why bisulfite
+conversion control probes on this platform are probably not informative, not
+least because poor bisulfite conversion will typically result in poor
+hybridization due to non-target cytosine bases in most probe oligos. In
+conclusion, these two control probe sets seem to be uninformative on EPIC,
+so they will be masked to 0 (pass) if a EPIC rgSet is passed in.
 }
