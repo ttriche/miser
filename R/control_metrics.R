@@ -20,8 +20,13 @@ control_metrics <- function(rgSet, dft=NULL, baseline=3000, biotin.baseline=1) {
   # make this easier on RAM by NOT grabbing hundreds of unneeded control probes 
   #
   cdf <- subset(getProbeInfo(rgSet, "Control"), !grepl("(NORM|NEGATIVE)", Type))
+
+  message("Retrieving control probe red intensities...") 
   rs <- as.matrix(t(getRed(rgSet[cdf$Address,])))
+  
+  message("Retrieving control probe green intensities...") 
   gs <- as.matrix(t(getGreen(rgSet[cdf$Address,])))
+
   rmat <- rs[, 0] # dimnames
   if (is.null(dft)) dft <- .get_dft() 
   cnl <- names(dft) 
