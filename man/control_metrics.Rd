@@ -25,3 +25,19 @@ https://github.com/metamaden/recountmethylationManuscriptSupplement
 modified slightly to take advantage of rgSet annotations and to Go Big,
 i.e. this works reasonably well on fairly large rgSets (like all of GEO)
 }
+\examples{
+  
+if (exists("MPAL_rgSet")) {
+  # TARGET MPAL data, from Alexander et al, Nature 2018
+  Heatmap(control_metrics(MPAL_rgSet), name="metrics", 
+          row_names_gp=gpar(fontsize=6), row_names_side="left")
+  Heatmap(flag_control_failures(control_metrics(MPAL_rgSet)), 
+          name="failures", row_names_gp=gpar(fontsize=6), 
+          row_names_side="left")
+} 
+
+}
+\seealso{
+\preformatted{          flag_control_failures
+}
+}

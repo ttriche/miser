@@ -12,6 +12,19 @@
 #'
 #' @return                a matrix (cols = metrics, rows = samples)
 #' 
+#' @examples 
+#'   
+#' if (exists("MPAL_rgSet")) {
+#'   # TARGET MPAL data, from Alexander et al, Nature 2018
+#'   Heatmap(control_metrics(MPAL_rgSet), name="metrics", 
+#'           row_names_gp=gpar(fontsize=6), row_names_side="left")
+#'   Heatmap(flag_control_failures(control_metrics(MPAL_rgSet)), 
+#'           name="failures", row_names_gp=gpar(fontsize=6), 
+#'           row_names_side="left")
+#' } 
+#' 
+#' @seealso               flag_control_failures
+#' 
 #' @import                minfi
 #'
 #' @export 

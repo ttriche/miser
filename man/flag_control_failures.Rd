@@ -31,5 +31,28 @@ conversion control probes on this platform are probably not informative, not
 least because poor bisulfite conversion will typically result in poor
 hybridization due to non-target cytosine bases in most probe oligos. In
 conclusion, these two control probe sets seem to be uninformative on EPIC,
-so they will be masked to 0 (pass) if a EPIC rgSet is passed in.
+so they will be masked as NA if an EPIC rgSet is passed in.
+}
+\examples{
+
+if (exists("MPAL_rgSet")) {
+
+  # TARGET MPAL data, from Alexander et al, Nature 2018
+  flagged <- flag_control_failures(MPAL_rgSet)
+  all_samples_passed <- ifelse(colSums(flagged) == 0, 1, 0)
+  all_probes_passed <- ifelse(rowSums(flagged) == 0, 1, 0)
+
+  library(circlize)
+  flagcols <- colorRamp2(c(0, 1), c("white", "darkred"))
+
+  library(ComplexHeatmap)
+  Heatmap(t(flagged), name="failed", col=flagcols, column_names_side="top",
+          column_split=all_probes_passed, column_names_gp=gpar(fontsize=6), 
+          row_split=all_samples_passed, row_names_side="left")
+} 
+  
+}
+\seealso{
+\preformatted{    control_metrics
+}
 }
