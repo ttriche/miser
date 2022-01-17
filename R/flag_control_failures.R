@@ -1,11 +1,11 @@
-#' get control quality assessments from an object returned by `bactrl`
+#' Get control QA from an object returned by `bactrl` or from an RGChannelSet
 #' 
 #' Apply BeadArray thresholds for quality flagging. Thresholds obtained from 
 #' the BeadArray Controls Reporter Software Guide (v00, source 2) and ewastools
-#' resource (v1.5, source 3).
+#' resource (v1.5, source 3). If an RGChannelSet is passed in, control_metrics()
+#' will be run on the rgSet and its detected annotation, then failures flagged.
 #'
-#' @param rmat      return matrix from control_metrics(), N rows by M cols, or
-#'                  RGChannelSet (in which case control_metrics() will be run)
+#' @param rmat      return matrix from control_metrics(), or RGChannelSet 
 #' @param dft       optional threshold data.frame; defaults will be used if null
 #' @param platform  optional platform indicator; will detect if rgSet ("EPIC") 
 #' 
@@ -27,6 +27,7 @@
 #'   Heatmap(t(flagged), name="failed", col=flagcols, column_names_side="top",
 #'           column_split=all_probes_passed, column_names_gp=gpar(fontsize=6), 
 #'           row_split=all_samples_passed, row_names_side="left")
+#'
 #' } 
 #'   
 #' @details

@@ -1,4 +1,4 @@
-#' bead array control processing function: get controls from red/green mats
+#' bead array control processing/QC: get metrics from control probe signals
 #' 
 #' mostly lifted from Sean Maden's recountmethylation supplement
 #' https://github.com/metamaden/recountmethylationManuscriptSupplement
@@ -15,12 +15,23 @@
 #' @examples 
 #'   
 #' if (exists("MPAL_rgSet")) {
+#'
 #'   # TARGET MPAL data, from Alexander et al, Nature 2018
-#'   Heatmap(control_metrics(MPAL_rgSet), name="metrics", 
-#'           row_names_gp=gpar(fontsize=6), row_names_side="left")
-#'   Heatmap(flag_control_failures(control_metrics(MPAL_rgSet)), 
-#'           name="failures", row_names_gp=gpar(fontsize=6), 
-#'           row_names_side="left")
+#'   cm <- control_metrics(MPAL_rgSet)
+#'
+#'   library(ComplexHeatmap)
+#'   Heatmap(t(cm), name="metric", column_names_side="top",
+#'           column_names_gp=gpar(fontsize=6), row_names_side="left")
+#'
+#'   library(circlize)
+#'   flagcols <- colorRamp2(c(0, 1), c("white", "darkred"))
+#'   flagged <- flag_control_failures(cm, platform="epic")
+#'   all_samples_passed <- ifelse(colSums(flagged) == 0, 1, 0)
+#'   all_probes_passed <- ifelse(rowSums(flagged) == 0, 1, 0)
+#'   Heatmap(t(flagged), name="failed", col=flagcols, column_names_side="top",
+#'           column_split=all_probes_passed, column_names_gp=gpar(fontsize=6), 
+#'           row_split=all_samples_passed, row_names_side="left")
+#'
 #' } 
 #' 
 #' @seealso               flag_control_failures
@@ -40,24 +51,27 @@ control_metrics <- function(rgSet, dft=NULL, baseline=3000, biotin.baseline=1) {
   message("Retrieving control probe green intensities...") 
   gs <- as.matrix(t(getGreen(rgSet[cdf$Address,])))
 
-  rmat <- rs[, 0] # dimnames
+  message("Loading thresholds...")
   if (is.null(dft)) dft <- .get_dft() 
   cnl <- names(dft) 
 
+  # just dimnames
+  rmat <- rs[, 0]
 
-  #------------------
-  # Background addr
-  #------------------
-  # 1 metric using extension grn channel
+
+  #---------------------
+  # Background addresses
+  #---------------------
+  # 1 metric, grn channel
   #
   ci <- .getsub(cdf, "EXTENSION")
   addr.bkg <- subset(ci, grepl("\\([AT]\\)", ExtendedType))$Address 
  
 
-  #-------------
-  # Restoration
-  #-------------
-  # 1 metric, uses just grn channel
+  #---------------------
+  # FFPE Restoration kit
+  #---------------------
+  # 1 metric, grn channel
   #
   message("calculating restore metric...")
   ci = .getsub(cdf, "RESTORATION")
@@ -77,20 +91,16 @@ control_metrics <- function(rgSet, dft=NULL, baseline=3000, biotin.baseline=1) {
   ci = cdf[grepl("Biotin|DNP", cdf$ExtendedType),]
   
   # red 
-  which.stain = which(colnames(rs) %in% 
-                      ci[grepl("DNP \\(High", ci$ExtendedType),]$Address)
-  which.bkg = which(colnames(rs) %in% 
-                    ci[grepl("DNP \\(Bkg", ci$ExtendedType),]$Address)
+  which.stain = which(colnames(rs) %in% .getetaddr(ci, "DNP \\(High"))
+  which.bkg = which(colnames(rs) %in% .getetaddr(ci, "DNP \\(Bkg"))
   m1 = apply(rs, 1, function(x) x[which.stain]/(x[which.bkg] + biotin.baseline))
   mi = 2
   rmat = cbind(rmat, m1)
   colnames(rmat)[ncol(rmat)] = cnl[mi]
 
   # grn
-  which.stain = which(colnames(gs) %in% 
-                      ci[grepl("Biotin \\(High", ci$ExtendedType),]$Address)
-  which.bkg = which(colnames(gs) %in% 
-                    ci[grepl("Biotin \\(Bkg", ci$ExtendedType),]$Address)
+  which.stain = which(colnames(gs) %in% .getetaddr(ci, "Biotin \\(High"))
+  which.bkg = which(colnames(gs) %in% .getetaddr(ci, "Biotin \\(Bkg"))
   m2 = apply(gs, 1, function(x) x[which.stain]/(x[which.bkg] + biotin.baseline))
   mi = 3
   rmat = cbind(rmat, m2)
@@ -107,10 +117,8 @@ control_metrics <- function(rgSet, dft=NULL, baseline=3000, biotin.baseline=1) {
 
   # red
   ci = ci1[grepl("Mismatch (4|5|6)", ci1$ExtendedType),]
-  addr.mm.index = which(colnames(rs) %in% 
-                        ci[grepl("MM", ci$ExtendedType),]$Address)
-  addr.pm.index = which(colnames(rs) %in% 
-                        ci[grepl("PM", ci$ExtendedType),]$Address)
+  addr.mm.index = which(colnames(rs) %in% .getetaddr(ci, "MM"))
+  addr.pm.index = which(colnames(rs) %in% .getetaddr(ci, "PM"))
   m1 = apply(rs, 1, function(x) min(x[addr.pm.index])/max(x[addr.mm.index]))
   mi = 4
   rmat = cbind(rmat, m1)
@@ -118,10 +126,8 @@ control_metrics <- function(rgSet, dft=NULL, baseline=3000, biotin.baseline=1) {
 
   # grn
   ci = ci1[grepl("Mismatch (1|2|3)", ci1$ExtendedType),]
-  addr.mm.index = which(colnames(gs) %in% 
-                        ci[grepl("MM", ci$ExtendedType),]$Address)
-  addr.pm.index = which(colnames(gs) %in% 
-                        ci[grepl("PM", ci$ExtendedType),]$Address)
+  addr.mm.index = which(colnames(gs) %in% .getetaddr(ci, "MM"))
+  addr.pm.index = which(colnames(gs) %in% .getetaddr(ci, "PM"))
   m2 = apply(gs, 1, function(x) min(x[addr.pm.index])/max(x[addr.mm.index]))
   mi = 5
   rmat = cbind(rmat, m2)
@@ -179,9 +185,9 @@ control_metrics <- function(rgSet, dft=NULL, baseline=3000, biotin.baseline=1) {
   #
   message("calculating hybridization metrics...")
   ci = .getsub(cdf, "HYBRIDIZATION")
-  which.hi = which(colnames(gs) %in% ci$Address[grepl("High", ci$ExtendedType)])
-  which.med = which(colnames(gs) %in% ci$Address[grepl("Med", ci$ExtendedType)])
-  which.low = which(colnames(gs) %in% ci$Address[grepl("Low", ci$ExtendedType)])
+  which.hi = which(colnames(gs) %in% .getetaddr(ci, "High"))
+  which.med = which(colnames(gs) %in% .getetaddr(ci, "Med"))
+  which.low = which(colnames(gs) %in% .getetaddr(ci, "Low"))
   m1 = apply(gs, 1, function(x) x[which.hi]/x[which.med])
   m2 = apply(gs, 1, function(x) x[which.med]/x[which.low])
   mi = 9
@@ -199,14 +205,11 @@ control_metrics <- function(rgSet, dft=NULL, baseline=3000, biotin.baseline=1) {
   #
   message("calculating target removal metics...")
   ci = .getsub(cdf, "EXTENSION")
-  which.bkg = which(colnames(gs) %in% 
-                    ci[grepl("(A)|(T)", ci$ExtendedType), ]$Address)
+  which.bkg = which(colnames(gs) %in% .getetaddr(ci, "(A)|(T)"))
 
   ci = .getsub(cdf, "TARGET REMOVAL")
-  which.t1 = which(colnames(gs) %in% 
-                   ci[grepl("Removal 1", ci$ExtendedType),]$Address)
-  which.t2 = which(colnames(gs) %in% 
-                   ci[grepl("Removal 2", ci$ExtendedType),]$Address)
+  which.t1 = which(colnames(gs) %in% .getetaddr(ci, "Removal 1"))
+  which.t2 = which(colnames(gs) %in% .getetaddr(ci, "Removal 2"))
 
   # rem 1
   m1 = apply(gs, 1, function(x) (max(x[which.bkg]) + baseline)/x[which.t1])
@@ -226,16 +229,14 @@ control_metrics <- function(rgSet, dft=NULL, baseline=3000, biotin.baseline=1) {
   #------------------------
   # 2 metrics, 1 per channel
   #
+  # Somewhat useless (see Zhou et al, NAR 2017)
+  #
   message("calculating bisulfite conversion I metrics...")
   ci = .getsub(cdf, "BISULFITE CONVERSION I")
-  which.c123 = which(colnames(gs) %in% 
-                     ci$Address[grepl("C1|C2|C3", ci$ExtendedType)])
-  which.u123 = which(colnames(gs) %in% 
-                     ci$Address[grepl("U1|U2|U3", ci$ExtendedType)])
-  which.c456 = which(colnames(rs) %in% 
-                     ci$Address[grepl("C4|C5|C6", ci$ExtendedType)])
-  which.u456 = which(colnames(rs) %in% 
-                     ci$Address[grepl("U4|U5|U6", ci$ExtendedType)])
+  which.c123 = which(colnames(gs) %in% .getetaddr(ci, "C[123]"))
+  which.u123 = which(colnames(gs) %in% .getetaddr(ci, "U[123]"))
+  which.c456 = which(colnames(gs) %in% .getetaddr(ci, "C[456]"))
+  which.u456 = which(colnames(gs) %in% .getetaddr(ci, "U[456]"))
 
   # red
   m1 = apply(rs, 1, function(x) min(x[which.c456])/max(x[which.u456]))
@@ -254,6 +255,8 @@ control_metrics <- function(rgSet, dft=NULL, baseline=3000, biotin.baseline=1) {
   # BISULFITE CONVERSION II
   #-------------------------
   # 2 metrics, 1 per channel
+  #
+  # Somewhat useless (see Zhou et al, NAR 2017)
   #
   message("calculating bisulfite conversion II metric...")
   ci = .getsub(cdf, "BISULFITE CONVERSION II")
@@ -276,20 +279,16 @@ control_metrics <- function(rgSet, dft=NULL, baseline=3000, biotin.baseline=1) {
   ci = .getsub(cdf, "NON-POLYMORPHIC")
 
   # red
-  which.cg = which(colnames(rs) %in% 
-                   ci$Address[grepl("(C)|(G)", ci$ExtendedType)])
-  which.at = which(colnames(rs) %in% 
-                   ci$Address[grepl("(A)|(T)", ci$ExtendedType)])
+  which.cg = which(colnames(rs) %in% .getetaddr(ci, "(C|G)"))
+  which.at = which(colnames(rs) %in% .getetaddr(ci, "(A|T)"))
   m1 = apply(rs, 1, function(x) min(x[which.at])/max(x[which.cg]))
   mi = 16
   rmat = cbind(rmat, m1)
   colnames(rmat)[ncol(rmat)] = cnl[mi]
 
   # grn
-  which.cg = which(colnames(gs) %in% 
-                   ci$Address[grepl("(C)|(G)", ci$ExtendedType)])
-  which.at = which(colnames(gs) %in% 
-                   ci$Address[grepl("(A)|(T)", ci$ExtendedType)])
+  which.cg = which(colnames(rs) %in% .getetaddr(ci, "(C|G)"))
+  which.at = which(colnames(rs) %in% .getetaddr(ci, "(A|T)"))
   m2 = apply(gs, 1, function(x) min(x[which.cg])/max(x[which.at]))
   mi = 17
   rmat = cbind(rmat, m2)
@@ -304,10 +303,11 @@ control_metrics <- function(rgSet, dft=NULL, baseline=3000, biotin.baseline=1) {
 
 
 # helper 
-.getsub <- function(cdf, ct, invert=FALSE) {
-  if (invert) subset(cdf, Type != ct)
-  else subset(cdf, Type == ct)
-}
+.getsub <- function(cdf, ct) subset(cdf, Type == ct)
+
+
+# helper 
+.getetaddr <- function(cdf, patt) subset(cdf, grepl(patt, ExtendedType))$Address
 
 
 # helper

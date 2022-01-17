@@ -2,7 +2,7 @@
 % Please edit documentation in R/control_metrics.R
 \name{control_metrics}
 \alias{control_metrics}
-\title{bead array control processing function: get controls from red/green mats}
+\title{bead array control processing/QC: get metrics from control probe signals}
 \usage{
 control_metrics(rgSet, dft = NULL, baseline = 3000, biotin.baseline = 1)
 }
@@ -28,12 +28,23 @@ i.e. this works reasonably well on fairly large rgSets (like all of GEO)
 \examples{
   
 if (exists("MPAL_rgSet")) {
+
   # TARGET MPAL data, from Alexander et al, Nature 2018
-  Heatmap(control_metrics(MPAL_rgSet), name="metrics", 
-          row_names_gp=gpar(fontsize=6), row_names_side="left")
-  Heatmap(flag_control_failures(control_metrics(MPAL_rgSet)), 
-          name="failures", row_names_gp=gpar(fontsize=6), 
-          row_names_side="left")
+  cm <- control_metrics(MPAL_rgSet)
+
+  library(ComplexHeatmap)
+  Heatmap(t(cm), name="metric", column_names_side="top",
+          column_names_gp=gpar(fontsize=6), row_names_side="left")
+
+  library(circlize)
+  flagcols <- colorRamp2(c(0, 1), c("white", "darkred"))
+  flagged <- flag_control_failures(cm, platform="epic")
+  all_samples_passed <- ifelse(colSums(flagged) == 0, 1, 0)
+  all_probes_passed <- ifelse(rowSums(flagged) == 0, 1, 0)
+  Heatmap(t(flagged), name="failed", col=flagcols, column_names_side="top",
+          column_split=all_probes_passed, column_names_gp=gpar(fontsize=6), 
+          row_split=all_samples_passed, row_names_side="left")
+
 } 
 
 }

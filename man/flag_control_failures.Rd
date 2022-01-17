@@ -2,13 +2,12 @@
 % Please edit documentation in R/flag_control_failures.R
 \name{flag_control_failures}
 \alias{flag_control_failures}
-\title{get control quality assessments from an object returned by \code{bactrl}}
+\title{Get control QA from an object returned by \code{bactrl} or from an RGChannelSet}
 \usage{
 flag_control_failures(rmat, dft = NULL, platform = "epic")
 }
 \arguments{
-\item{rmat}{return matrix from control_metrics(), N rows by M cols, or
-RGChannelSet (in which case control_metrics() will be run)}
+\item{rmat}{return matrix from control_metrics(), or RGChannelSet}
 
 \item{dft}{optional threshold data.frame; defaults will be used if null}
 
@@ -21,7 +20,8 @@ RGChannelSet (in which case control_metrics() will be run)}
 \description{
 Apply BeadArray thresholds for quality flagging. Thresholds obtained from
 the BeadArray Controls Reporter Software Guide (v00, source 2) and ewastools
-resource (v1.5, source 3).
+resource (v1.5, source 3). If an RGChannelSet is passed in, control_metrics()
+will be run on the rgSet and its detected annotation, then failures flagged.
 }
 \details{
 Every single EPIC IDAT that we have seen fails nonpolymorphic.grn and 99.5\%
@@ -49,6 +49,7 @@ if (exists("MPAL_rgSet")) {
   Heatmap(t(flagged), name="failed", col=flagcols, column_names_side="top",
           column_split=all_probes_passed, column_names_gp=gpar(fontsize=6), 
           row_split=all_samples_passed, row_names_side="left")
+
 } 
   
 }
