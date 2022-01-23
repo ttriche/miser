@@ -39,8 +39,8 @@ processFromIDATs <- function(..., addgeo=FALSE) {
     return(rgSet)
   } else { 
     metadata(grSet) <- metadata(rgSet)
-    colData(grSet)$inferred_sex <- getSex(grSet)
-    # sesame's version of this is better but for now just use minfi's 
+    colData(grSet)$inferred_sex <- getSex(grSet)$predictedSex
+    # sesame's version of this is better, but for now just use minfi's 
     return(grSet)
   }
   # eventually, it would be better to create a grSet-like object that wraps 
