@@ -4,13 +4,15 @@
 \alias{processFromIDATs}
 \title{read in a directory's worth of IDATs, flag controls, and sesamize them all}
 \usage{
-processFromIDATs(...)
+processFromIDATs(..., addgeo = FALSE)
 }
 \arguments{
 \item{...}{options to pass to sesame::sesamize}
+
+\item{addgeo}{optional: try to annotate from GEO? (FALSE)}
 }
 \value{
-a GenomicRatioSet
+a GenomicRatioSet (or an rgSet in case of failure)
 }
 \description{
 Note: this function simply reads all IDATs in the current directory,

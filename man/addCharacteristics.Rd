@@ -7,7 +7,7 @@
 addCharacteristics(x, column = "subject", titles = TRUE, cachePath = NULL)
 }
 \arguments{
-\item{x}{either a grSet from sesamizeGEO, or a bunch of GSMs}
+\item{x}{an RGChannelSet or GenomicRatioSet with $subject, or GSMs}
 
 \item{column}{name of the column holding the GSMs ("subject")}
 
@@ -16,7 +16,7 @@ addCharacteristics(x, column = "subject", titles = TRUE, cachePath = NULL)
 \item{cachePath}{where to cache the GEOmetadb sqlite file (tempdir())}
 }
 \value{
-\preformatted{       a grSet, perhaps with additional colData, or a data.frame
+\preformatted{       an rg/grSet, perhaps with more colData, or a data.frame
 }
 }
 \description{
