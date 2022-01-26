@@ -4,15 +4,21 @@
 #'       runs QC, stuffs that into metadata, and sesamizes the result. 
 #'
 #' @param ...     options to pass to sesame::sesamize
+#' @param frags   which elements of the filename are relevant? (1:3)
 #' @param addgeo  optional: try to annotate from GEO? (FALSE) 
 #'
 #' @return a GenomicRatioSet (or an rgSet in case of failure)
 #' 
+#' @import sesame 
+#'
 #' @export 
-processFromIDATs <- function(..., addgeo=FALSE) {
+processFromIDATs <- function(..., frags=1:3, addgeo=FALSE) {
 
-  targets <- getSamps() 
-  rgSet <- read.metharray.exp(".", targets=targets)
+  message("Cataloging IDATs...")
+  targets <- getSamps(frags=frags) 
+  message(nrow(targets), " samples found. Reading signals...")
+  rgSet <- read.metharray.exp(".", targets=targets, verbose=TRUE)
+  message("Done. Mapping to the genome...")
 
   # QC (document how the SNPs are done...) 
   colnames(rgSet) <- rgSet$subject
@@ -33,14 +39,16 @@ processFromIDATs <- function(..., addgeo=FALSE) {
   }
 
   # create a masked GenomicRatioSet
-  grSet <- try(sesamize(rgSet, ...))
+  grSet <- try(sesame::sesamize(rgSet, ...))
   if (inherits(grSet, "try-error")) {
     message("Failed to create GenomicRatioSet! Returning raw RGChannelSet.")
     return(rgSet)
   } else { 
     metadata(grSet) <- metadata(rgSet)
-    colData(grSet)$inferred_sex <- getSex(grSet)$predictedSex
+    colData(grSet)$inferred_sex <- minfi::getSex(grSet)$predictedSex
     # sesame's version of this is better, but for now just use minfi's 
+    rowData(grSet)$IslandStatus <- minfi::getIslandStatus(grSet)
+    # for XY QC metrics 
     return(grSet)
   }
   # eventually, it would be better to create a grSet-like object that wraps 

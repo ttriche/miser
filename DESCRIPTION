@@ -2,8 +2,8 @@ Package: miser
 Type: Package
 Title: the poor man's methylation suite (cf. `sesamizer`)
 Description: this package makes my life less annoying when working off of GEO
-Version: 0.99.20220123
-Date: 2022-01-23
+Version: 0.99.20220126
+Date: 2022-01-26
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), 
                     email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]

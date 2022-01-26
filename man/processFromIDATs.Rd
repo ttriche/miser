@@ -4,10 +4,12 @@
 \alias{processFromIDATs}
 \title{read in a directory's worth of IDATs, flag controls, and sesamize them all}
 \usage{
-processFromIDATs(..., addgeo = FALSE)
+processFromIDATs(..., frags = 1:3, addgeo = FALSE)
 }
 \arguments{
 \item{...}{options to pass to sesame::sesamize}
+
+\item{frags}{which elements of the filename are relevant? (1:3)}
 
 \item{addgeo}{optional: try to annotate from GEO? (FALSE)}
 }
