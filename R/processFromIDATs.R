@@ -1,18 +1,21 @@
-#' read in a directory's worth of IDATs, flag controls, and sesamize them all
+#' read in a directory's worth of IDATs, QC them, optionally sesamize them all
 #' 
 #' Note: this function simply reads all IDATs in the current directory, 
-#'       runs QC, stuffs that into metadata, and sesamizes the result. 
+#'       runs QC, stuffs in metadata, and (if !justRgSet) sesamizes it. 
 #'
-#' @param ...     options to pass to sesame::sesamize
-#' @param frags   which elements of the filename are relevant? (1:3)
-#' @param addgeo  optional: try to annotate from GEO? (FALSE) 
+#' @param frags     which elements of the filenames are relevant? (1:3)
+#' @param addgeo    optional: try to annotate from GEO? (FALSE) 
+#' @param justRgSet optional: dump the rgSet and don't sesamize? (FALSE)
+#' @param ...       options to pass to sesame::sesamize
 #'
 #' @return a GenomicRatioSet (or an rgSet in case of failure)
-#' 
+#'
+#' @import R.utils
 #' @import sesame 
+#' @import minfi
 #'
 #' @export 
-processFromIDATs <- function(..., frags=1:3, addgeo=FALSE) {
+processFromIDATs <- function(frags=1:3, addgeo=FALSE, justRgSet=FALSE, ...) {
 
   message("Cataloging IDATs...")
   targets <- getSamps(frags=frags) 
@@ -31,14 +34,17 @@ processFromIDATs <- function(..., frags=1:3, addgeo=FALSE) {
     message("Attempting to pull metadata...")
     res <- try(addCharacteristics(rgSet))
     if (inherits(res, "try-error")) {
-      message("Failed, returning unmodified results.")
+      message("GEO annotation failed, returning unmodified results.")
     } else {
       message("Success!")
       rgSet <- res
     }
   }
 
-  # create a masked GenomicRatioSet
+  # just return the rgSet?
+  if (justRgSet) return(rgSet)
+
+  # otherwise, create masked GenomicRatioSet
   grSet <- try(sesame::sesamize(rgSet, ...))
   if (inherits(grSet, "try-error")) {
     message("Failed to create GenomicRatioSet! Returning raw RGChannelSet.")

@@ -1,39 +1,58 @@
-#' dump QC (NAs, flags) and SNP/XY covariates CSVs (optionally, betas as well)
+#' dump QC (NAs, flags, XY stats) and (optionally) SNP calls and beta values
 #'
-#' SNPs and sex are saved in stub_SNPXY.csv.gz
-#' NA fraction and flagged controls are saved in stub_qc.csv.gz
-#' sesamized betas (including NA-masked values) are saved in stub_betas.csv.gz
-#' (but only if betas == TRUE! this tends to be an enormous file, obviously) 
+#' NA fraction, median CN, control flags, XY stats are saved in stub_QC.csv.gz
+#' SNP calls are saved in stub_SNPcalls.csv.gz if snps == TRUE
+#' SNP intensities are saved in stub_SNPs.csv.gz if snps == TRUE 
+#' Sesamized betas are saved in stub_betas.csv.gz if betas == TRUE 
 #'
 #' @param grSet       GenomicRatioSet with betas and QC metrics to dump out 
-#' @param stub        mandatory file prefix (_qc, _SNPXY, _betas.csv.gz)
+#' @param stub        mandatory prefix for derived files (e.g. stub_QC.csv.gz)
 #' @param path        where to save the dumped CSV file[s] (".")
+#' @param snps        dump SNPs and SNP calls? (TRUE) 
 #' @param betas       dump beta values too? (FALSE) 
 #'
-#' @return a GenomicRatioSet (or an rgSet in case of failure)
+#' @return            the status of the final operation
 #' 
-#' @import minfi
+#' @seealso           SNPcalls
+#' 
+#' @import            mclust
+#' @import            minfi
 #' 
 #' @export 
-dumpQCfiles <- function(grSet, stub, path=".", betas=FALSE) {
+dumpQCfiles <- function(grSet, stub=NULL, path=".", snps=TRUE, betas=FALSE) {
 
+  if (is.null(stub) | stub == "") stop("Error: `stub` cannot be empty.")
   if (!is(grSet, "GenomicRatioSet")) stop("Input is not a GenomicRatioSet.")
   grSet <- rename_meta(grSet) # just in case the colnames don't match!
 
   na_frac <- .NAfrac(grSet)
+  XYstats <- .XYstats(grSet)
+  medianCN <- .medianCN(grSet)
+  flagstats <- metadata(grSet)$control_flagged
   qcfile <- paste0(stub, "_qc.csv")
   qcpath <- file.path(path, qcfile)
-  qcmat <- rbind(NA_frac=na_frac, metadata(grSet)$control_flagged)
+  qcmat <- rbind(NA_frac=na_frac, medianCN=medianCN, flagstats, XYstats)
   write.csv(qcmat, qcpath)
   qcgz <- gzip(qcpath)
   message("Wrote QC information to ", qcgz, ".")
 
-  snps_xy <- .SNPXY(grSet)
-  snpxyfile <- paste0(stub, "_SNPXY.csv")
-  snpxypath <- file.path(path, snpxyfile)
-  write.csv(snps_xy, snpxypath)
-  snpxygz <- gzip(snpxypath)
-  message("Wrote SNPXY information to ", snpxygz, ".")
+  if (snps) {
+
+    SNPcalls <- SNPcalls(grSet)
+    SNPcallfile <- paste0(stub, "_SNPcalls.csv")
+    SNPcallpath <- file.path(path, SNPcallfile)
+    write.csv(SNPcalls, SNPcallpath)
+    SNPcallgz <- gzip(snpcallpath)
+    message("Wrote SNP calls to ", SNPcallgz, ".")
+
+    SNPs <- metadata(grSet)$SNPs
+    SNPfile <- paste0(stub, "_SNPs.csv")
+    SNPpath <- file.path(path, SNPfile)
+    write.csv(SNPs, SNPpath)
+    SNPsgz <- gzip(SNPspath)
+    message("Wrote SNP intensities to ", SNPsgz, ".")
+
+  }
 
   if (betas) { 
     
@@ -65,30 +84,34 @@ dumpQCfiles <- function(grSet, stub, path=".", betas=FALSE) {
 }
 
 
-# helper fn
-.SNPXY <- function(grSet) {
+# helper fn 
+.medianCN <- function(grSet) {
+  
+  colMedians(getCN(grSet), na.rm=TRUE)
 
-  SNPs <- metadata(grSet)$SNPs 
+}
+
+
+# helper fn
+.XYstats <- function(grSet) {
 
   XNA <- is.na(getBeta(subset(grSet, seqnames %in% c("chrX", "X"))))
   rowfrac <- rowSums(XNA) / ncol(XNA)
   masked_X <- sum(rowfrac == 1)
   XNAfrac <- (colSums(XNA) - masked_X) / (nrow(XNA) - masked_X)
 
-
   YNA <- is.na(getBeta(subset(grSet, seqnames %in% c("chrY", "Y"))))
   yrowfrac <- rowSums(YNA) / ncol(YNA)
   masked_Y <- sum(yrowfrac == 1)
-  if (all(yrowfrac == 1)) {
-    YNAfrac <- rep(1, ncol(YNA))
-  } else { 
-    YNAfrac <- (colSums(YNA) - masked_Y) / (nrow(YNA) - masked_Y)
+  YNAfrac <- rep(1, ncol(YNA))
+  if (!all(yrowfrac == 1)) {
+    YNAfrac <- (colSums(YNA)-masked_Y)/(nrow(YNA)-masked_Y)
   }
 
-  whichX <- rownames(subset(grSet, 
-                            seqnames %in% c("chrX", "X") & 
-                              rowData(grSet)$IslandStatus != "OpenSea"))
-  XBeta <- colMeans(getBeta(grSet[whichX, ]), na.rm=TRUE)
-  rbind(SNPs, XNAfrac=XNAfrac, YNAfrac=YNAfrac, XBeta=XBeta)
+  whichX <- rownames(subset(grSet, seqnames %in% c("chrX", "X") & 
+                                   rowData(grSet)$IslandStatus != "OpenSea"))
+  XBeta <- colMedians(getBeta(grSet[whichX, ]), na.rm=TRUE)
+  
+  return(rbind(XNAfrac=XNAfrac, YNAfrac=YNAfrac, XBeta=XBeta))
 
 }
