@@ -23,6 +23,7 @@ dumpQCfiles <- function(grSet, stub=NULL, path=".", snps=TRUE, betas=FALSE) {
 
   if (is.null(stub) | stub == "") stop("Error: `stub` cannot be empty.")
   if (!is(grSet, "GenomicRatioSet")) stop("Input is not a GenomicRatioSet.")
+  if (!"control_flagged" %in% names(metadata(grSet))) stop("No control data!")
   grSet <- rename_meta(grSet) # just in case the colnames don't match!
 
   na_frac <- .NAfrac(grSet)
