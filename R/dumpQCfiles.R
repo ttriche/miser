@@ -42,7 +42,7 @@ dumpQCfiles <- function(grSet, stub=NULL, path=".", snps=TRUE, betas=FALSE) {
     SNPcallfile <- paste0(stub, "_SNPcalls.csv")
     SNPcallpath <- file.path(path, SNPcallfile)
     write.csv(SNPcalls, SNPcallpath)
-    SNPcallgz <- gzip(snpcallpath)
+    SNPcallgz <- gzip(SNPcallpath)
     message("Wrote SNP calls to ", SNPcallgz, ".")
 
     SNPs <- metadata(grSet)$SNPs
