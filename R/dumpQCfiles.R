@@ -49,8 +49,8 @@ dumpQCfiles <- function(grSet, stub=NULL, path=".", snps=TRUE, betas=FALSE) {
     SNPfile <- paste0(stub, "_SNPs.csv")
     SNPpath <- file.path(path, SNPfile)
     write.csv(SNPs, SNPpath)
-    SNPsgz <- gzip(SNPspath)
-    message("Wrote SNP intensities to ", SNPsgz, ".")
+    SNPgz <- gzip(SNPpath)
+    message("Wrote SNP intensities to ", SNPgz, ".")
 
   }
 
