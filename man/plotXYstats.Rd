@@ -4,12 +4,12 @@
 \alias{plotXYstats}
 \title{simple function for plotting XY stats (split by inferred sex if found)}
 \usage{
-plotXYstats(grSet, column = NULL, ...)
+plotXYstats(x, sex = NULL, ...)
 }
 \arguments{
-\item{grSet}{a GenomicRatioSet}
+\item{x}{a GenomicRatioSet, or an XYstats matrix}
 
-\item{column}{optional column name with sex information}
+\item{sex}{optional sex labels to use for splitting the plot}
 
 \item{...}{additional parameters to pass to ComplexHeatmap::Heatmap}
 }

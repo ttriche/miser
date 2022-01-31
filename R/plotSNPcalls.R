@@ -2,7 +2,7 @@
 #' 
 #' plot SNPs living in metadata(x)$SNPs, provided they match sampleNames(x)
 #' 
-#' @param x       a grSet with SNPs in its metadata()
+#' @param x       a grSet with SNPs in its metadata(), or a SNP matrix 
 #' @param rotate  rotate the subjects onto the side? (FALSE)
 #' @param ...     other arguments passed on to Heatmap
 #' 
@@ -13,11 +13,16 @@
 plotSNPcalls <- function(x, rotate=FALSE, ...) { 
 
   SNP <- colorRamp2(seq(0, 2), c("#00007F", "yellow", "#7F0000"))
-  SNPs <- as.matrix(metadata(x)$SNPs) # handle DelayedArray SNPs
-  if (is.null(SNPs) | !all(colnames(x) %in% colnames(SNPs))) {
-    stop("Your SNPs don't match your samples. Aborting.")
+  if (is(x, "GenomicRatioSet") | is(x, "RGChannelSet")) { 
+    SNPs <- as.matrix(metadata(x)$SNPs) # handle DelayedArray SNPs
+    if (is.null(SNPs) | !all(colnames(x) %in% colnames(SNPs))) {
+      stop("Your SNPs don't match your samples. Aborting.")
+    }
+    SNPs <- SNPs[, colnames(x)]
+  } else { 
+    SNPs <- x
   }
-  SNPcalls <- SNPcalls(SNPs[, colnames(x)])
+  SNPcalls <- SNPcalls(SNPs)
   if (rotate) SNPcalls <- t(SNPcalls)
   Heatmap(SNPcalls, col=SNP, name="Alleles", ...)
 

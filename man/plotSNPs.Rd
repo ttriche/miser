@@ -7,7 +7,7 @@
 plotSNPs(x, rotate = FALSE, ...)
 }
 \arguments{
-\item{x}{a grSet with SNPs in its metadata()}
+\item{x}{a grSet with SNPs in its metadata(), or a SNP matrix}
 
 \item{rotate}{rotate the subjects onto the side? (FALSE)}
 
