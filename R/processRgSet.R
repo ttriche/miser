@@ -30,8 +30,14 @@ processRgSet <- function(rgSet, addgeo=FALSE, ...) {
     message("Flagging control probe failures in metadata...")
     metadata(grSet)$control_flagged <- t(flag_control_failures(rgSet))
   }
-  # sesame's version of this is better, but for now just use minfi's 
-  colData(grSet)$inferred_sex <- minfi::getSex(grSet)$predictedSex
+  # sesame's version is better,
+  # but minfi's is more convenient
+  infsex <- try(minfi::getSex(grSet))
+  if (!inherits(infsex, "try-error")) {
+    colData(grSet)$inferred_sex <- infsex$predictedSex
+  } else { 
+    warning("Could not automatically infer sex from CN.")
+  }
   rowData(grSet)$IslandStatus <- minfi::getIslandStatus(grSet)
   rowData(grSet)$NAfrac <- rowSums(is.na(getBeta(grSet)))/ncol(grSet)
   colData(grSet)$NAfrac <- NAfrac(grSet)
