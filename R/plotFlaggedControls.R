@@ -16,6 +16,7 @@ plotFlaggedControls <- function(grSet, ...) {
 
   stopifnot("control_flagged" %in% names(metadata(grSet)))
   flagged <- metadata(grSet)$control_flagged
+  flagged <- flagged[!apply(flagged, 1, function(x) any(is.na(x))), ]
   flagcols <- colorRamp2(c(0, 1), c("white", "darkred"))
   all_samples <- ifelse(colSums(flagged, na.rm=TRUE) == 0, 
                         "all metrics pass", "some metrics fail")
