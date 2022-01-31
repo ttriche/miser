@@ -2,22 +2,19 @@
 #' 
 #' This is useful in finding probes/features that discriminate classes well.
 #'
-#' @param x     a Matrix, DelayedMatrix, or GenomicRatioSet 
+#' @param x     a Matrix, DelayedArray, or GenomicRatioSet 
 #' 
 #' @return      actualSd/bernoulliSd for each row
 #'
-#' @import DelayedMatrixStats
-#' @import DelayedArray
+#' @import      DelayedArray
 #'
 #' @export
 rowExtremalities <- function(x) {
-  if (is(x, "GenomicRatioSet")) {
-    x <- getBeta(x)
-  } 
+  if (is(x, "GenomicRatioSet")) x <- getBeta(x)
   DelayedArray:::set_verbose_block_processing(TRUE) 
   setAutoBlockSize(1e9) # look at billion entries at a time
-  means <- DelayedMatrixStats::rowMeans2(x, na.rm=TRUE)
-  actualSd <- DelayedMatrixStats::rowSds(x, na.rm=TRUE)
+  means <- rowMeans2(x, na.rm=TRUE)
+  actualSd <- rowSds(x, na.rm=TRUE)
   bernoulliSd <- sqrt(means * (1 - means))
   # practical fix for numerical instability:
   res <- (actualSd / pmax(bernoulliSd, actualSd)) 

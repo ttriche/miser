@@ -10,7 +10,7 @@
 #' 
 #' @export
 plotSNPs <- function(x, rotate=FALSE, ...) { 
-  SNPs <- as.matrix(metadata(x)$SNPs) # handle DelayedMatrix SNPs
+  SNPs <- as.matrix(metadata(x)$SNPs) # handle DelayedArray SNPs
   if (is.null(SNPs) | !all(colnames(x) %in% colnames(SNPs))) {
     stop("Your SNPs don't match your samples. Aborting.")
   }

@@ -26,10 +26,8 @@ Imports:
     circlize,
     parallel,
     GEOmetadb,
-    HDF5Array,
     DelayedArray,
-    ComplexHeatmap,
-    DelayedMatrixStats
+    ComplexHeatmap
 Suggests:
     covr,
     erma, 

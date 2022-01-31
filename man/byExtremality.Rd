@@ -24,6 +24,4 @@ for X having a known mean and SD, hence solvable for a + b by MoM, define
 extremality = sd(X_j) / bernoulliSD(mean(X_j))
 
 This function selects the k most extremal rows of x and returns their values.
-
-TODO: operate in parallel when working on an HDF5-backed object
 }
