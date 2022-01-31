@@ -39,16 +39,19 @@ if (exists("MPAL_rgSet")) {
 
   # TARGET MPAL data, from Alexander et al, Nature 2018
   flagged <- flag_control_failures(MPAL_rgSet)
-  all_samples_passed <- ifelse(colSums(flagged, na.rm=TRUE) == 0, 1, 0)
-  all_probes_passed <- ifelse(rowSums(flagged, na.rm=TRUE) == 0, 1, 0)
+  flagged <- flagged[apply(flagged, 1, function(x) !any(is.na(x))), ]
+  all_samples <- ifelse(colSums(flagged, na.rm=TRUE) == 0, 
+                        "all metrics pass", "some metrics fail")
+  all_probes <- ifelse(rowSums(flagged, na.rm=TRUE) == 0, 
+                       "all samples pass", "some samples fail")
 
   library(circlize)
   flagcols <- colorRamp2(c(0, 1), c("white", "darkred"))
 
   library(ComplexHeatmap)
-  Heatmap(t(flagged), name="failed", col=flagcols, column_names_side="top",
-          column_split=all_probes_passed, column_names_gp=gpar(fontsize=6), 
-          row_split=all_samples_passed, row_names_side="left")
+  Heatmap(flagged, name="failed", col=flagcols, column_names_side="top",
+          column_split=all_samples, column_names_gp=gpar(fontsize=8), 
+          row_split=all_probes, row_names_side="left")
 
 } 
   
