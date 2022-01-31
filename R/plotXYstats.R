@@ -11,11 +11,11 @@
 #' @export
 plotXYstats <- function(grSet, ...) {
 
-  XYpct <- XYstats(grSet) * 100
+  XY <- XYstats(grSet)
   if ("inferred_sex" %in% names(colData(grSet))) {
-    Heatmap(XYpct, name="%", col=jet, column_split=grSet$inferred_sex, ...)
+    Heatmap(XY, name="frac", col=jet, column_split=grSet$inferred_sex, ...)
   } else {
-    Heatmap(XYpct, name="%", col=jet, ...)
+    Heatmap(XY, name="frac", col=jet, ...)
   } 
 
 }
