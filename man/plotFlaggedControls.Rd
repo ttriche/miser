@@ -4,10 +4,10 @@
 \alias{plotFlaggedControls}
 \title{simple function for plotting control probe failure flaggings}
 \usage{
-plotFlaggedControls(grSet, ...)
+plotFlaggedControls(x, ...)
 }
 \arguments{
-\item{grSet}{GenomicRatioSet where !is.null(metadata(grSet)$control_flagged)}
+\item{x}{an object where !is.null(metadata(x)$control_flagged), or a matrix}
 
 \item{...}{additional parameters to pass to ComplexHeatmap::Heatmap}
 }
@@ -15,6 +15,9 @@ plotFlaggedControls(grSet, ...)
 a Heatmap
 }
 \description{
-The data is drawn from metadata(grSet)$control_flagged; if not present,
-the function will fail with an error message. See flag_control_failures().
+If an object is provided without suitable metadata, this function will fail.
+See flag_control_failures().
+}
+\seealso{
+flag_control_failures
 }
