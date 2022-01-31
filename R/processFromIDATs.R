@@ -21,7 +21,6 @@ processFromIDATs <- function(frags=1:3, addgeo=FALSE, justRgSet=FALSE, ...) {
   targets <- getSamps(frags=frags) 
   message(nrow(targets), " samples found. Reading signals...")
   rgSet <- read.metharray.exp(".", targets=targets, verbose=TRUE)
-  message("Done. Mapping to the genome...")
 
   # QC (document how the SNPs are done...) 
   colnames(rgSet) <- rgSet$subject
@@ -44,20 +43,7 @@ processFromIDATs <- function(frags=1:3, addgeo=FALSE, justRgSet=FALSE, ...) {
   # just return the rgSet?
   if (justRgSet) return(rgSet)
 
-  # otherwise, create masked GenomicRatioSet
-  grSet <- try(sesame::sesamize(rgSet, ...))
-  if (inherits(grSet, "try-error")) {
-    message("Failed to create GenomicRatioSet! Returning raw RGChannelSet.")
-    return(rgSet)
-  } else { 
-    metadata(grSet) <- metadata(rgSet)
-    colData(grSet)$inferred_sex <- minfi::getSex(grSet)$predictedSex
-    # sesame's version of this is better, but for now just use minfi's 
-    rowData(grSet)$IslandStatus <- minfi::getIslandStatus(grSet)
-    # for XY QC metrics 
-    return(grSet)
-  }
-  # eventually, it would be better to create a grSet-like object that wraps 
-  # a FileSet but links to appropriate metadata, e.g. a GenomicFileSet 
+  # create GenomicRatioSet
+  processRgSet(rgSet, ...) 
 
 }

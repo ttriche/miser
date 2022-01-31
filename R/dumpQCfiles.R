@@ -26,13 +26,12 @@ dumpQCfiles <- function(grSet, stub=NULL, path=".", snps=TRUE, betas=FALSE) {
   if (!"control_flagged" %in% names(metadata(grSet))) stop("No control data!")
   grSet <- rename_meta(grSet) # just in case the colnames don't match!
 
-  na_frac <- .NAfrac(grSet)
-  XYstats <- .XYstats(grSet)
-  medianCN <- .medianCN(grSet)
-  flagstats <- metadata(grSet)$control_flagged
   qcfile <- paste0(stub, "_qc.csv")
   qcpath <- file.path(path, qcfile)
-  qcmat <- rbind(NA_frac=na_frac, medianCN=medianCN, flagstats, XYstats)
+  qcmat <- rbind(NA_frac=NAfrac(grSet), 
+                 medianCN=colMedians(getCN(grSet)),
+                 metadata(grSet)$control_flagged,
+                 XYstats(grSet))
   write.csv(qcmat, qcpath)
   qcgz <- gzip(qcpath)
   message("Wrote QC information to ", qcgz, ".")
@@ -64,55 +63,5 @@ dumpQCfiles <- function(grSet, stub=NULL, path=".", snps=TRUE, betas=FALSE) {
     message("Wrote betas to ", betagz, ".")
 
   }
-
-}
-
-
-# helper fn
-.NAfrac <- function(grSet) {
-
-  na_mat <- is.na(getBeta(grSet))
-  rowfrac <- rowSums(na_mat) / ncol(na_mat)
-  masked_loci <- sum(rowfrac == 1)
-  message(masked_loci, " are masked in all samples; omitting from NA tallies.")
-  na_frac <- (colSums(na_mat) - masked_loci) / (nrow(na_mat) - masked_loci)
-  worstsample <- colnames(na_mat)[which.max(na_frac)]
-  message("Failed probes: median of ", round(median(na_frac * 100), 1), "%, ", 
-          "maximum of ", round(max(na_frac * 100), 1), "% ",
-          "(in ", worstsample, ")")
-  return(na_frac) 
-
-}
-
-
-# helper fn 
-.medianCN <- function(grSet) {
-  
-  colMedians(getCN(grSet), na.rm=TRUE)
-
-}
-
-
-# helper fn
-.XYstats <- function(grSet) {
-
-  XNA <- is.na(getBeta(subset(grSet, seqnames %in% c("chrX", "X"))))
-  rowfrac <- rowSums(XNA) / ncol(XNA)
-  masked_X <- sum(rowfrac == 1)
-  XNAfrac <- (colSums(XNA) - masked_X) / (nrow(XNA) - masked_X)
-
-  YNA <- is.na(getBeta(subset(grSet, seqnames %in% c("chrY", "Y"))))
-  yrowfrac <- rowSums(YNA) / ncol(YNA)
-  masked_Y <- sum(yrowfrac == 1)
-  YNAfrac <- rep(1, ncol(YNA))
-  if (!all(yrowfrac == 1)) {
-    YNAfrac <- (colSums(YNA)-masked_Y)/(nrow(YNA)-masked_Y)
-  }
-
-  whichX <- rownames(subset(grSet, seqnames %in% c("chrX", "X") & 
-                                   rowData(grSet)$IslandStatus != "OpenSea"))
-  XBeta <- colMedians(getBeta(grSet[whichX, ]), na.rm=TRUE)
-  
-  return(rbind(XNAfrac=XNAfrac, YNAfrac=YNAfrac, XBeta=XBeta))
 
 }
