@@ -39,8 +39,8 @@ if (exists("MPAL_rgSet")) {
 
   # TARGET MPAL data, from Alexander et al, Nature 2018
   flagged <- flag_control_failures(MPAL_rgSet)
-  all_samples_passed <- ifelse(colSums(flagged) == 0, 1, 0)
-  all_probes_passed <- ifelse(rowSums(flagged) == 0, 1, 0)
+  all_samples_passed <- ifelse(colSums(flagged, na.rm=TRUE) == 0, 1, 0)
+  all_probes_passed <- ifelse(rowSums(flagged, na.rm=TRUE) == 0, 1, 0)
 
   library(circlize)
   flagcols <- colorRamp2(c(0, 1), c("white", "darkred"))
