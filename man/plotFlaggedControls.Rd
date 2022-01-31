@@ -4,10 +4,12 @@
 \alias{plotFlaggedControls}
 \title{simple function for plotting control probe failure flaggings}
 \usage{
-plotFlaggedControls(x, ...)
+plotFlaggedControls(x, only = FALSE, ...)
 }
 \arguments{
-\item{x}{an object where !is.null(metadata(x)$control_flagged), or a matrix}
+\item{x}{an object w/!is.null(metadata(x)$control_flagged), or a matrix}
+
+\item{only}{only plot samples where there are failures? (FALSE)}
 
 \item{...}{additional parameters to pass to ComplexHeatmap::Heatmap}
 }

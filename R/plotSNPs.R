@@ -17,7 +17,7 @@ plotSNPs <- function(x, rotate=FALSE, ...) {
     }
     SNPs <- SNPs[, colnames(x)]
   } else { 
-    SNPs <- x
+    SNPs <- as.matrix(x)
   }
   if (rotate) SNPs <- t(SNPs)
   Heatmap(SNPs, name="BAF", 

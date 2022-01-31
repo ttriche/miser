@@ -20,7 +20,7 @@ plotSNPcalls <- function(x, rotate=FALSE, ...) {
     }
     SNPs <- SNPs[, colnames(x)]
   } else { 
-    SNPs <- x
+    SNPs <- as.matrix(x)
   }
   SNPcalls <- SNPcalls(SNPs)
   if (rotate) SNPcalls <- t(SNPcalls)
