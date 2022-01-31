@@ -24,6 +24,11 @@ plotSNPcalls <- function(x, rotate=FALSE, ...) {
   }
   SNPcalls <- SNPcalls(SNPs)
   if (rotate) SNPcalls <- t(SNPcalls)
-  Heatmap(SNPcalls, col=SNP, name="Alleles", ...)
+  Heatmap(SNPcalls, col=SNP, name="Alleles",
+          clustering_method_columns='ward.D2', 
+          clustering_distance_columns='manhattan', 
+          clustering_method_rows='ward.D2', 
+          clustering_distance_rows='manhattan',
+          ...)
 
 }

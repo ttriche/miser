@@ -20,5 +20,10 @@ plotSNPs <- function(x, rotate=FALSE, ...) {
     SNPs <- x
   }
   if (rotate) SNPs <- t(SNPs)
-  Heatmap(SNPs, name="BAF", ...)
+  Heatmap(SNPs, name="BAF", 
+          clustering_method_columns='ward.D2', 
+          clustering_distance_columns='manhattan', 
+          clustering_method_rows='ward.D2', 
+          clustering_distance_rows='manhattan',
+          ...)
 }
