@@ -11,14 +11,25 @@
 #'
 #' @export 
 processRgSet <- function(rgSet, addgeo=FALSE, ...) {
-  
+
+  message("Attempting to sesamize ", ncol(rgSet), " samples...") 
   grSet <- try(sesame::sesamize(rgSet, ...))
   if (inherits(grSet, "try-error")) {
     message("Failed to create GenomicRatioSet! Returning raw RGChannelSet.")
     return(rgSet)
+  } else { 
+    message("Done.")
   }
 
   metadata(grSet) <- metadata(rgSet)
+  if (!"SNPs" %in% names(metadata(grSet))) {
+    message("Adding SNP intensities to metadata...")
+    metadata(grSet)$SNPs <- getSnpBeta(rgSet) 
+  } 
+  if (!"control_flagged" %in% names(metadata(grSet))) {
+    message("Flagging control probe failures in metadata...")
+    metadata(grSet)$control_flagged <- t(flag_control_failures(rgSet))
+  }
   # sesame's version of this is better, but for now just use minfi's 
   colData(grSet)$inferred_sex <- minfi::getSex(grSet)$predictedSex
   rowData(grSet)$IslandStatus <- minfi::getIslandStatus(grSet)
