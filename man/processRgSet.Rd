@@ -4,14 +4,14 @@
 \alias{processRgSet}
 \title{sesamize an RGChannelSet with sensible QC and passing BPPARAM, etc.}
 \usage{
-processRgSet(rgSet, ...)
+processRgSet(rgSet, addgeo = FALSE, ...)
 }
 \arguments{
 \item{rgSet}{an RGChannelSet with SNPs and control_flagged in metadata()}
 
-\item{...}{options to pass to sesame::sesamize}
-
 \item{addgeo}{optional: try to annotate from GEO, if not already done? (F)}
+
+\item{...}{options to pass to sesame::sesamize}
 }
 \value{
 \preformatted{     a GenomicRatioSet (or an rgSet if failure)

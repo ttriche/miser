@@ -10,7 +10,7 @@
 #' @import minfi
 #'
 #' @export 
-processRgSet <- function(rgSet, ...) {
+processRgSet <- function(rgSet, addgeo=FALSE, ...) {
   
   grSet <- try(sesame::sesamize(rgSet, ...))
   if (inherits(grSet, "try-error")) {
