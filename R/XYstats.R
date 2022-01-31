@@ -20,6 +20,9 @@ XYstats <- function(grSet) {
     YNAfrac <- (colSums(YNA)-masked_Y)/(nrow(YNA)-masked_Y)
   }
 
+  if (!"IslandStatus" %in% names(rowData(grSet))) {
+    rowData(grSet)$IslandStatus <- minfi::getIslandStatus(grSet)
+  }
   whichX <- rownames(subset(grSet, seqnames %in% c("chrX", "X") & 
                                    rowData(grSet)$IslandStatus != "OpenSea"))
   XBeta <- colMedians(getBeta(grSet[whichX, ]), na.rm=TRUE)
