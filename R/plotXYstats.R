@@ -32,9 +32,20 @@ plotXYstats <- function(x, sex=NULL, ...) {
   }
   
   if (!is.null(sex)) {
-    Heatmap(XY, name="frac", col=jet, column_split=sex, ...)
+    Heatmap(XY, name="frac", col=jet, column_split=sex,
+            clustering_method_columns='ward.D2', 
+            clustering_distance_columns='manhattan', 
+            clustering_method_rows='ward.D2', 
+            clustering_distance_rows='manhattan',
+            ...)
   } else {
-    Heatmap(XY, name="frac", col=jet, ...)
+    Heatmap(XY, name="frac", col=jet,
+            clustering_method_columns='ward.D2', 
+            clustering_distance_columns='manhattan', 
+            clustering_method_rows='ward.D2', 
+            clustering_distance_rows='manhattan',
+            ...)
+
   } 
 
 }
