@@ -11,7 +11,11 @@
 #' @export
 plotXYstats <- function(grSet, ...) {
 
-  XY <- XYstats(grSet)
+  if ("XYstats" %in% names(metadata(grSet))) {
+    XY <- metadata(grSet)$XYstats
+  } else {
+    XY <- XYstats(grSet)
+  }
   if ("inferred_sex" %in% names(colData(grSet))) {
     Heatmap(XY, name="frac", col=jet, column_split=grSet$inferred_sex, ...)
   } else {

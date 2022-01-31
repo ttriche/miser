@@ -39,6 +39,7 @@ processRgSet <- function(rgSet, addgeo=FALSE, ...) {
     warning("Could not automatically infer sex from CN.")
   }
   rowData(grSet)$IslandStatus <- minfi::getIslandStatus(grSet)
+  metadata(grSet)$XYstats <- XYstats(grSet) # using the above bits...
   rowData(grSet)$NAfrac <- rowSums(is.na(getBeta(grSet)))/ncol(grSet)
   colData(grSet)$NAfrac <- NAfrac(grSet)
   
