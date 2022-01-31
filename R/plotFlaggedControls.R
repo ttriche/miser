@@ -23,7 +23,7 @@ plotFlaggedControls <- function(grSet, ...) {
   all_probes <- ifelse(rowSums(flagged, na.rm=TRUE) == 0,
                        "all samples pass", "some samples fail")
 
-  Heatmap(flagged, name="failed", col=flagcols, column_names_side="top",
+  Heatmap(flagged, name="failed", col=flagcols, column_names_side="top", ..., 
           column_split=all_samples, row_split=all_probes, row_names_side="left")
 
 }
