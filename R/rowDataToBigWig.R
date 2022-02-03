@@ -35,10 +35,12 @@ rowDataToBigWig <- function(x, mcol, fname=NULL, seqs=NULL, nmf=NULL) {
 
   if (!is.null(nmf)) {
     stopifnot(all(rownames(nmf@w) %in% names(gr))) 
+    rows <- intersect(rownames(nmf@w), names(gr))
+    gr <- gr[rows]
     if (!is.null(mcol)) {
-      mcols(gr) <- nmf@w[names(gr), mcol]
+      mcols(gr) <- nmf@w[rows, mcol]
     } else { 
-      mcols(gr) <- nmf@w[names(gr), ]
+      mcols(gr) <- nmf@w[rows, ]
     }
   }
   return(gr)
