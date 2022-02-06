@@ -4,7 +4,7 @@
 \alias{print.dmrcate.output}
 \title{since I use DMRcate a lot, I wrote this to avoid borking the command line}
 \usage{
-\method{print}{dmrcate.output}(object)
+print.dmrcate.output(object)
 }
 \arguments{
 \item{object}{an object of class dmrcate.output}
