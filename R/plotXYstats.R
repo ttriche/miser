@@ -15,17 +15,17 @@ plotXYstats <- function(x, sex=NULL, ...) {
   if (!is.null(sex)) message("Splitting plot on provided sex covariate...")
   if (is(x, "GenomicRatioSet") | is(x, "RGChannelSet")) { 
     if ("XYstats" %in% names(metadata(x))) {
-      XY <- as.matrix(metadata(grSet)$XYstats)
+      XY <- as.matrix(metadata(x)$XYstats)
     } else {
-      XY <- XYstats(grSet)
+      XY <- XYstats(x)
     }
     XY <- XY[, colnames(x)]
     if (is.null(sex) & "sex" %in% names(colData(x))) {
       message("Splitting plot based on `sex`...")
-      sex <- grSet$sex
+      sex <- x$sex
     } else if (is.null(sex) & "inferred_sex" %in% names(colData(x))) {
       message("Splitting plot based on `inferred_sex`...")
-      sex <- grSet$inferred_sex
+      sex <- x$inferred_sex
     }
   } else { 
     XY <- x

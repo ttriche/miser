@@ -43,7 +43,7 @@ regressFactors <- function(x, columns, y=NULL, how=c("lmFit","concordance"), che
   how <- match.arg(how)
   if (how == "concordance") stop("`concordance` is not yet supported.") 
 
-  design <- with(preds, model.matrix(~ .))
+  design <- model.matrix(~ . , preds)
   message("coefs (for topTable(fit)): ")
   for (i in seq_along(colnames(design))) message(i, ": ", colnames(design)[i])
   eBayes(lmFit(y, design))
