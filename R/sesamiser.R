@@ -10,6 +10,7 @@
 #' @param GSE               which GSE to get
 #' @param element           which element of the getGEO result to work on? (1)
 #' @param suppcols          cols ("supplementary_file", "supplementary_file.1")
+#' @param ...               additional arguments to pass to read.metharray()
 #' 
 #' @return                  a sesamized GenomicRatioSet
 #'
@@ -18,7 +19,7 @@
 #' @import minfi
 #'
 #' @export
-sesamiser <- function(GSE, element=1, suppcols=c("supplementary_file","supplementary_file.1"), path="."){
+sesamiser <- function(GSE, element=1, suppcols=c("supplementary_file","supplementary_file.1", ...), path="."){
 
   tmp <- as(getGEO(GSE)[[element]], "SummarizedExperiment") 
   if (! all(suppcols %in% names(colData(tmp)))) {
@@ -33,7 +34,7 @@ sesamiser <- function(GSE, element=1, suppcols=c("supplementary_file","supplemen
     names(IDATs) <- covs$geo_accession
     covs <- cbind(covs, getSamps(IDATs))
     message("Reading in IDATs...")
-    rgSet <- getRGChannelSet(samps=covs)
+    rgSet <- getRGChannelSet(samps=covs, ...)
     message("Sesamizing...")
     res <- sesame::sesamize(rgSet)
     message("Adding probe mask...")

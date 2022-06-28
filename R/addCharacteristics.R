@@ -5,12 +5,12 @@
 #' @param   x         an RGChannelSet or GenomicRatioSet with $subject, or GSMs
 #' @param   column    name of the column holding the GSMs ("subject") 
 #' @param   titles    tack on the titles as well? (TRUE)
-#' @param   cachePath where to cache the GEOmetadb sqlite file (tempdir())
+#' 
+#' @details           this function rolls through the GSMs and grabs @header
 #'
 #' @return            an rg/grSet, perhaps with more colData, or a data.frame
 #' 
-#' @import  GEOmetadb
-#' @import  RSQLite
+#' @import  GEOquery
 #' 
 #' @export 
 addCharacteristics <- function(x, column="subject",titles=TRUE,cachePath=NULL) {
@@ -25,18 +25,7 @@ addCharacteristics <- function(x, column="subject",titles=TRUE,cachePath=NULL) {
     GSMs <- x
   }
 
-  if (is.null(cachePath)) cachePath <- tempdir()
-  cacheFile <- paste(cachePath, "GEOmetadb.sqlite", sep="/")
-  if (!file.exists(cacheFile)) {
-    message("Caching GEOmetadb database...") 
-    getSQLiteFile(destdir=cachePath)
-  }
-  con <- dbConnect(RSQLite::SQLite(), cacheFile)
-  query <- paste0("SELECT gsm, characteristics_ch1 FROM gsm WHERE gsm IN ('",
-                  paste(GSMs, collapse="','"), "')")
-  res <- dbGetQuery(con, query)
-  rownames(res) <- res$gsm
- 
+
   if (!all(GSMs %in% res$gsm)) stop("Missing records! Aborting.")
   
   toParse <- res[GSMs, "characteristics_ch1"]
