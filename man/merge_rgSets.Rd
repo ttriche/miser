@@ -12,8 +12,8 @@ merge_rgSets(rgSet1, rgSet2)
 \item{rgSet2}{the second RGChannelSet}
 }
 \value{
-\preformatted{   the result of cbind(rgSet1, rgSet2) with sensible metadata 
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   the result of cbind(rgSet1, rgSet2) with sensible metadata 
+}\if{html}{\out{</div>}}
 }
 \description{
 Merges metadata, drops from each RGChannelSet, merges RGChannelSets, re-adds

@@ -18,8 +18,8 @@ dumpQCfiles(grSet, stub = NULL, path = ".", snps = TRUE, betas = FALSE)
 \item{betas}{dump beta values too? (FALSE)}
 }
 \value{
-\preformatted{       the status of the final operation
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{       the status of the final operation
+}\if{html}{\out{</div>}}
 }
 \description{
 NA fraction, median CN, control flags, XY stats are saved in stub_QC.csv.gz
@@ -28,6 +28,6 @@ SNP intensities are saved in stub_SNPs.csv.gz if snps == TRUE
 Sesamized betas are saved in stub_betas.csv.gz if betas == TRUE
 }
 \seealso{
-\preformatted{      SNPcalls
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{      SNPcalls
+}\if{html}{\out{</div>}}
 }

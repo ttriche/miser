@@ -14,8 +14,8 @@ mergeMeth(x, y, verbose = TRUE)
 \item{verbose}{be verbose? (TRUE)}
 }
 \value{
-\preformatted{   a GenomicRatioSet combining the two
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   a GenomicRatioSet combining the two
+}\if{html}{\out{</div>}}
 }
 \description{
 helper function to merge grSets

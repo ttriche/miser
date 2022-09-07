@@ -8,7 +8,8 @@ sesamiser(
   GSE,
   element = 1,
   suppcols = c("supplementary_file", "supplementary_file.1"),
-  path = "."
+  path = ".",
+  ...
 )
 }
 \arguments{
@@ -17,10 +18,12 @@ sesamiser(
 \item{element}{which element of the getGEO result to work on? (1)}
 
 \item{suppcols}{cols ("supplementary_file", "supplementary_file.1")}
+
+\item{...}{additional arguments to pass to read.metharray()}
 }
 \value{
-\preformatted{             a sesamized GenomicRatioSet
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{             a sesamized GenomicRatioSet
+}\if{html}{\out{</div>}}
 }
 \description{
 Note 0: this function will download the data with getGEO first (!)

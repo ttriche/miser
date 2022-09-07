@@ -12,8 +12,8 @@ getSamps(subjects = NULL, frags = 1:3)
 \item{frags}{which elements to extract for the array Basename (1:3)}
 }
 \value{
-\preformatted{       a data.frame
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{       a data.frame
+}\if{html}{\out{</div>}}
 }
 \description{
 helper function to read in samples and Basename columns

@@ -12,8 +12,8 @@ testIDATs(samps, ...)
 \item{...}{other arguments, currently unused}
 }
 \value{
-\preformatted{     the status of an attempt to annotate those IDATs 
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     the status of an attempt to annotate those IDATs 
+}\if{html}{\out{</div>}}
 }
 \description{
 make sure annotations and so forth are in place before doing a big run...

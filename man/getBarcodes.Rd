@@ -14,8 +14,8 @@ getBarcodes(dir = ".", elt = 1:2, ...)
 \item{...}{other arguments to pass to elts()}
 }
 \value{
-\preformatted{ the barcodes
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ the barcodes
+}\if{html}{\out{</div>}}
 }
 \description{
 Note that getBarcodes(dir, 1) will get the chip address for unmolested IDATs.

@@ -16,3 +16,6 @@ plotSNPcalls(x, rotate = FALSE, ...)
 \description{
 plot SNPs living in metadata(x)$SNPs, provided they match sampleNames(x)
 }
+\details{
+The plotting itself is done by miser:::.plotSNPcallmat().
+}

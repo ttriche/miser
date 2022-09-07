@@ -14,8 +14,8 @@ flag_control_failures(rmat, dft = NULL, platform = "epic")
 \item{platform}{optional platform indicator; will detect if rgSet ("EPIC")}
 }
 \value{
-\preformatted{ an NxM matrix of threshold assessments, 0 = pass, 1 = fail
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ an NxM matrix of threshold assessments, 0 = pass, 1 = fail
+}\if{html}{\out{</div>}}
 }
 \description{
 Apply BeadArray thresholds for quality flagging. Thresholds obtained from
@@ -57,6 +57,6 @@ if (exists("MPAL_rgSet")) {
   
 }
 \seealso{
-\preformatted{    control_metrics
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    control_metrics
+}\if{html}{\out{</div>}}
 }

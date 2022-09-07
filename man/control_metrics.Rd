@@ -16,8 +16,8 @@ control_metrics(rgSet, dft = NULL, baseline = 3000, biotin.baseline = 1)
 \item{biotin.baseline}{baseline offset for biotin staining probes (1)}
 }
 \value{
-\preformatted{           a matrix (cols = metrics, rows = samples)
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{           a matrix (cols = metrics, rows = samples)
+}\if{html}{\out{</div>}}
 }
 \description{
 mostly lifted from Sean Maden's recountmethylation supplement
@@ -49,6 +49,6 @@ if (exists("MPAL_rgSet")) {
 
 }
 \seealso{
-\preformatted{          flag_control_failures
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{          flag_control_failures
+}\if{html}{\out{</div>}}
 }

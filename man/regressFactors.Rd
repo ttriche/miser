@@ -36,23 +36,23 @@ regressFactors(
 \item{...}{additional arguments to lmFit, if how == "fit"}
 }
 \value{
-\preformatted{       a fitted model (use topTable on it) or concordance object
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{       a fitted model (use topTable on it) or concordance object
+}\if{html}{\out{</div>}}
 }
 \description{
 if \code{y} is specified, use that instead of assay(x) but constrain it the same
 if \code{purify} is specified, purify assay(x) before proceeding with the fit(s)
 }
 \seealso{
-\preformatted{      purify
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{      purify
+}\if{html}{\out{</div>}}
 
-\preformatted{      limma::lmFit
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{      limma::lmFit
+}\if{html}{\out{</div>}}
 
-\preformatted{      limma::topTable
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{      limma::topTable
+}\if{html}{\out{</div>}}
 
-\preformatted{      survival::concordance
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{      survival::concordance
+}\if{html}{\out{</div>}}
 }

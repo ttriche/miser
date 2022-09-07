@@ -16,8 +16,8 @@ vafClust(alt, ref, depth = NULL, ...)
 \item{eps}{epsilon to use for DBSCAN clustering}
 }
 \value{
-\preformatted{   an object of class `dbscan_fast`
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   an object of class `dbscan_fast`
+}\if{html}{\out{</div>}}
 }
 \description{
 Suppose we have read coverage over a base with a detected variant.

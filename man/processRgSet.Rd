@@ -14,8 +14,8 @@ processRgSet(rgSet, addgeo = FALSE, ...)
 \item{...}{options to pass to sesame::sesamize}
 }
 \value{
-\preformatted{     a GenomicRatioSet (or an rgSet if failure)
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     a GenomicRatioSet (or an rgSet if failure)
+}\if{html}{\out{</div>}}
 }
 \description{
 sesamize an RGChannelSet with sensible QC and passing BPPARAM, etc.

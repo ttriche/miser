@@ -16,8 +16,8 @@ elts(x, sep = "_", elt = 1, naify = FALSE)
 \item{naify}{return NA_character_ if y is not present? (FALSE)}
 }
 \value{
-\preformatted{   a string, joined by `sep` if `elt` is a vector
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   a string, joined by `sep` if `elt` is a vector
+}\if{html}{\out{</div>}}
 }
 \description{
 Another function that I keep rewriting; no more!

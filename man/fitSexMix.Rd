@@ -12,8 +12,8 @@ fitSexMix(x, ...)
 \item{...}{arguments to pass to Mclust}
 }
 \value{
-\preformatted{   an mclust fit object with $sex as fitted sex
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   an mclust fit object with $sex as fitted sex
+}\if{html}{\out{</div>}}
 }
 \description{
 simple function for plotting a mixture model for sex from XY stats

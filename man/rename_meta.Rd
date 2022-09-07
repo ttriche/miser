@@ -10,8 +10,8 @@ rename_meta(x)
 \item{x}{the SummarizedExperiment-derived thing with metadata to rename}
 }
 \value{
-\preformatted{ the same, but with metadata columns renamed to colnames(x)
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ the same, but with metadata columns renamed to colnames(x)
+}\if{html}{\out{</div>}}
 }
 \description{
 convenience function to rename columns of *Set metadata matrices

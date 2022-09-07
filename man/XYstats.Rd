@@ -10,8 +10,8 @@ XYstats(grSet)
 \item{grSet}{a GenomicRatioSet}
 }
 \value{
-\preformatted{     a matrix of XNA, YNA, XBeta for each column
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     a matrix of XNA, YNA, XBeta for each column
+}\if{html}{\out{</div>}}
 }
 \description{
 compute assorted sex chromosome related statistics (XNA, YNA, XBeta)

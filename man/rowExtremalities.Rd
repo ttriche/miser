@@ -10,8 +10,8 @@ rowExtremalities(x)
 \item{x}{a Matrix, DelayedArray, or GenomicRatioSet}
 }
 \value{
-\preformatted{ actualSd/bernoulliSd for each row
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ actualSd/bernoulliSd for each row
+}\if{html}{\out{</div>}}
 }
 \description{
 This is useful in finding probes/features that discriminate classes well.

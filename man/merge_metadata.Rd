@@ -12,10 +12,8 @@ merge_metadata(x, y)
 \item{y}{the second object}
 }
 \value{
-\preformatted{   a list() with the merged metadata
-}
-
-
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   a list() with the merged metadata
+}\if{html}{\out{</div>}}
 }
 \description{
 The two objects' metadata must have identical names,

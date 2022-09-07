@@ -10,13 +10,13 @@ SNPcalls(SNPs)
 \item{SNPs}{a GenomicRatioSet or a matrix of SNP beta values}
 }
 \value{
-\preformatted{     0/1/2 calls for each SNP in each sample
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     0/1/2 calls for each SNP in each sample
+}\if{html}{\out{</div>}}
 }
 \description{
 fit a 1-to-3-component mixture model to flogit(SNPbetas) for each sample
 }
 \details{
-\preformatted{    Mclust(miser::flogit(x), G=1:3) is run for each sample. 
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    Mclust(miser::flogit(x), G=1:3) is run for each sample. 
+}\if{html}{\out{</div>}}
 }

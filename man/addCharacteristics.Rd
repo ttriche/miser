@@ -12,13 +12,15 @@ addCharacteristics(x, column = "subject", titles = TRUE, cachePath = NULL)
 \item{column}{name of the column holding the GSMs ("subject")}
 
 \item{titles}{tack on the titles as well? (TRUE)}
-
-\item{cachePath}{where to cache the GEOmetadb sqlite file (tempdir())}
 }
 \value{
-\preformatted{       an rg/grSet, perhaps with more colData, or a data.frame
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{       an rg/grSet, perhaps with more colData, or a data.frame
+}\if{html}{\out{</div>}}
 }
 \description{
 like it says on the tin. this is usually for filling out pData/colData
+}
+\details{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{      this function rolls through the GSMs and grabs @header
+}\if{html}{\out{</div>}}
 }

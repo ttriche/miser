@@ -4,7 +4,7 @@
 \alias{getRGChannelSet}
 \title{assemble a suitable RGChannelSet for sesamizing}
 \usage{
-getRGChannelSet(subjects = NULL, frags = 1:3, samps = NULL)
+getRGChannelSet(subjects = NULL, frags = 1:3, samps = NULL, ...)
 }
 \arguments{
 \item{subjects}{the names of each subject, or NULL to autodetect (NULL)}
@@ -12,10 +12,12 @@ getRGChannelSet(subjects = NULL, frags = 1:3, samps = NULL)
 \item{frags}{which elements to extract for the array Basename (1:3)}
 
 \item{samps}{targets data.frame (overrides subjects and frags) (NULL)}
+
+\item{...}{additional arguments to pass to read.metharray()}
 }
 \value{
-\preformatted{       an RGChannelSet with pData $subject and $Basename filled 
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{       an RGChannelSet with pData $subject and $Basename filled 
+}\if{html}{\out{</div>}}
 }
 \description{
 Note: this should probably go away in favor of signalSet parallel processing

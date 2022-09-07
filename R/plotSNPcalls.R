@@ -6,13 +6,15 @@
 #' @param rotate  rotate the subjects onto the side? (FALSE)
 #' @param ...     other arguments passed on to Heatmap
 #' 
+#' @details
+#' The plotting itself is done by miser:::.plotSNPcallmat(). 
+#' 
 #' @import ComplexHeatmap
 #' @import circlize
 #' 
 #' @export
 plotSNPcalls <- function(x, rotate=FALSE, ...) { 
 
-  SNP <- colorRamp2(seq(0, 2), c("#00007F", "yellow", "#7F0000"))
   if (is(x, "GenomicRatioSet") | is(x, "RGChannelSet")) { 
     SNPs <- as.matrix(metadata(x)$SNPs) # handle DelayedArray SNPs
     if (is.null(SNPs) | !all(colnames(x) %in% colnames(SNPs))) {
@@ -24,7 +26,19 @@ plotSNPcalls <- function(x, rotate=FALSE, ...) {
   }
   SNPcalls <- SNPcalls(SNPs)
   if (rotate) SNPcalls <- t(SNPcalls)
-  Heatmap(SNPcalls, col=SNP, name="Alleles",
+  .plotSNPcallmat(SNPcalls, ...) 
+
+}
+
+
+# helper fn
+.plotSNPcallmat <- function(SNPs_called, ...) {
+
+  SNP_colors <- colorRamp2(seq(0, 2), c("#00007F", "yellow", "#7F0000"))
+  
+  Heatmap(SNPs_called,
+          col=SNP_colors, 
+          name="Alleles",
           clustering_method_columns='ward.D2', 
           clustering_distance_columns='manhattan', 
           clustering_method_rows='ward.D2', 

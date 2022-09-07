@@ -17,8 +17,8 @@ purify(x, purity, sqz = 1e-06, betas = TRUE)
 \item{betas}{are the values of assay(x) between 0 and 1? (default is TRUE)}
 }
 \value{
-\preformatted{   whatever `x` is (matrix or SE), purified (see Details)
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   whatever `x` is (matrix or SE), purified (see Details)
+}\if{html}{\out{</div>}}
 }
 \description{
 Given x with rows and columns, and purity estimates for each column,
@@ -30,12 +30,14 @@ expits to put the purified values back on a 0-1 scale.
 \code{purify} is even dumber and simply divides each assays(x) by purity,
 unless the argument \code{betas} is TRUE (the default), in which case it
 calls \code{purifyBetas} instead. (This is a methylation-centric package,
-although VAFs can be treated the same way, hence the default setting.)\preformatted{  If you pass `purity` estimates of 0, you'll get an error.
+although VAFs can be treated the same way, hence the default setting.)
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  If you pass `purity` estimates of 0, you'll get an error.
            If `x` is a GenomicRatioSet, only assays(x)$Beta is purified.
            No attempt is made to preserve imprinting or any such thing,
            although the tendency of imprinted regions to fall near zero
            on a logit scale, and the fact that zero times anything is 
            still zero, does incidentally encourage this. However, any
            resemblance to biological sanity is purely coincidental.
-}
+}\if{html}{\out{</div>}}
 }

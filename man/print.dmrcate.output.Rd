@@ -10,8 +10,8 @@ print.dmrcate.output(object)
 \item{object}{an object of class dmrcate.output}
 }
 \value{
-\preformatted{   nothing, just cat the object's various properties
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   nothing, just cat the object's various properties
+}\if{html}{\out{</div>}}
 }
 \description{
 since I use DMRcate a lot, I wrote this to avoid borking the command line

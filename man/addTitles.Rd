@@ -14,8 +14,8 @@ addTitles(x, column = "subject", cachePath = NULL)
 \item{cachePath}{where to cache the GEOmetadb sqlite file (tempdir())}
 }
 \value{
-\preformatted{       a retitled grSet (if x is a grSet) or a bunch of titles
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{       a retitled grSet (if x is a grSet) or a bunch of titles
+}\if{html}{\out{</div>}}
 }
 \description{
 like it says on the tin. this is usually for labeling purposes.

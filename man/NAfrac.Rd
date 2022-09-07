@@ -10,8 +10,8 @@ NAfrac(grSet)
 \item{grSet}{a GenomicRatioSet}
 }
 \value{
-\preformatted{     the fraction NA (of probes that aren't 100\% NA) per column
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     the fraction NA (of probes that aren't 100\% NA) per column
+}\if{html}{\out{</div>}}
 }
 \description{
 compute the fraction of sample-specific (not masked) NA probes

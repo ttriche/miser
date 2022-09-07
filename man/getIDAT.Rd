@@ -12,8 +12,8 @@ getIDAT(IDAT, path = ".")
 \item{path}{where to look for it or store it locally (".")}
 }
 \value{
-\preformatted{ the local file path, if present or if downloaded successfully
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ the local file path, if present or if downloaded successfully
+}\if{html}{\out{</div>}}
 }
 \description{
 convenience function; checks to see if an IDAT file was downloaded already

@@ -19,7 +19,7 @@
 #' @import minfi
 #'
 #' @export
-sesamiser <- function(GSE, element=1, suppcols=c("supplementary_file","supplementary_file.1", ...), path="."){
+sesamiser <- function(GSE, element=1, suppcols=c("supplementary_file","supplementary_file.1"), path=".", ...){
 
   tmp <- as(getGEO(GSE)[[element]], "SummarizedExperiment") 
   if (! all(suppcols %in% names(colData(tmp)))) {

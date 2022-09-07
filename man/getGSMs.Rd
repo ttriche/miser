@@ -12,8 +12,8 @@ getGSMs(GSMs, cachePath = NULL)
 \item{cachePath}{where the cached GEOmetadb SQLite file lives (tempdir())}
 }
 \value{
-\preformatted{       a list of supplementary filenames, usually 2 per GSM
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{       a list of supplementary filenames, usually 2 per GSM
+}\if{html}{\out{</div>}}
 }
 \description{
 There's probably a better way to do this, but we haven't found it.
