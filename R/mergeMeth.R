@@ -22,15 +22,13 @@ mergeMeth <- function(x, y, verbose=TRUE) {
   matchingAssays <- intersect(assayNames(x), assayNames(y))
   if (length(matchingAssays) < 1) stop("No matching assays found.")
   if (verbose) message(length(matchingAssays), " assays matched.")
-  assays(x) <- assays(x)[matchingAssays]
-  assays(y) <- assays(y)[matchingAssays]
+  assays(x) <- lapply(assays(x)[matchingAssays], as.matrix) # else bug later
+  assays(y) <- lapply(assays(y)[matchingAssays], as.matrix) # else bug later
 
   # probes 
   matchingRows <- intersect(rownames(x), rownames(y))
   if (length(matchingRows) < 1) stop("No matching probes found.")
   if (verbose) message(length(matchingRows), " probes matched.")
-  # x <- x[matchingRows,] # don't bother
-  # y <- y[matchingRows,] # don't bother 
 
   # covariates
   matchingColData <- intersect(names(colData(x)), names(colData(y)))
@@ -41,6 +39,7 @@ mergeMeth <- function(x, y, verbose=TRUE) {
 
   # if no SNPs in metadata, this is the last step
   res <- cbind(x[matchingRows,], y[matchingRows,])
+  # this will fail if DelayedMatrix assays are present
  
   # metadata/SNP weirdness fix 
   if ("SNPs" %in% names(metadata(x)) & "SNPs" %in% names(metadata(y))) {
