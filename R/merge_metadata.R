@@ -8,7 +8,6 @@
 #' 
 #' @return        a list() with the merged metadata
 #' 
-#' @return
 #' @export
 merge_metadata <- function(x, y) {
 

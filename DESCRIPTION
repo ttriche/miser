@@ -2,8 +2,8 @@ Package: miser
 Type: Package
 Title: the poor man's methylation suite (cf. `sesamizer`)
 Description: this package makes my life less annoying when working off of GEO
-Version: 0.99.20220907
-Date: 2022-09-07
+Version: 0.99.20221010
+Date: 2022-10-10
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), 
                     email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]
@@ -28,7 +28,6 @@ Imports:
     survival,
     GEOmetadb,
     rtracklayer,
-    DelayedArray,
     BiocParallel,
     ComplexHeatmap
 Suggests:
@@ -37,6 +36,7 @@ Suggests:
     impute,
     testthat,
     compartmap,
+    DelayedArray,
     recountmethylation
 RoxygenNote: 7.2.1
 Roxygen: list(markdown = TRUE)

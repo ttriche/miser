@@ -11,7 +11,7 @@
 #' @export
 plotSNPs <- function(x, rotate=FALSE, ...) { 
   if (is(x, "GenomicRatioSet") | is(x, "RGChannelSet")) { 
-    SNPs <- as.matrix(metadata(x)$SNPs) # handle DelayedArray SNPs
+    SNPs <- as.matrix(metadata(x)$SNPs)
     if (is.null(SNPs) | !all(colnames(x) %in% colnames(SNPs))) {
       stop("Your SNPs don't match your samples. Aborting.")
     }

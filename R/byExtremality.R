@@ -25,14 +25,13 @@ byExtremality <- function(x, k=500) {
 
 # helper fn
 .extremality <- function(x) {
-  if (is(x, "GenomicRatioSet")) {
-    DelayedArray:::set_verbose_block_processing(TRUE) 
-    setAutoBlockSize(1e6) # look at a million entries at a time
-    .extremality(getBeta(x))
-  } else { 
-    means <- rowMeans2(x, na.rm=TRUE)
-    bernoulliSd <- sqrt(means * (1 - means))
-    actualSd <- rowSds(x, na.rm=TRUE)
-    return(actualSd / bernoulliSd)
-  }
+  # if (is(x, "GenomicRatioSet")) {
+  #   setAutoBlockSize(1e6) # look at a million entries at a time
+  #   .extremality(getBeta(x))
+  # } else { 
+  means <- rowMeans2(x, na.rm=TRUE)
+  bernoulliSd <- sqrt(means * (1 - means))
+  actualSd <- rowSds(x, na.rm=TRUE)
+  return(actualSd / bernoulliSd)
+  # }
 }

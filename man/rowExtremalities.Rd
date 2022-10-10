@@ -7,7 +7,7 @@
 rowExtremalities(x)
 }
 \arguments{
-\item{x}{a Matrix, DelayedArray, or GenomicRatioSet}
+\item{x}{a Matrix or GenomicRatioSet}
 }
 \value{
 \if{html}{\out{<div class="sourceCode">}}\preformatted{ actualSd/bernoulliSd for each row
