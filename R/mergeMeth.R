@@ -22,8 +22,8 @@ mergeMeth <- function(x, y, verbose=TRUE) {
   matchingAssays <- intersect(assayNames(x), assayNames(y))
   if (length(matchingAssays) < 1) stop("No matching assays found.")
   if (verbose) message(length(matchingAssays), " assays matched.")
-  assays(x) <- lapply(assays(x)[matchingAssays], as.matrix) # else bug later
-  assays(y) <- lapply(assays(y)[matchingAssays], as.matrix) # else bug later
+  assays(x) <- lapply(assays(x)[matchingAssays], as, "matrix") # else bug later
+  assays(y) <- lapply(assays(y)[matchingAssays], as, "matrix") # else bug later
 
   # probes 
   matchingRows <- intersect(rownames(x), rownames(y))
@@ -45,8 +45,10 @@ mergeMeth <- function(x, y, verbose=TRUE) {
   if ("SNPs" %in% names(metadata(x)) & "SNPs" %in% names(metadata(y))) {
     if (all(colnames(x) %in% colnames(metadata(x)$SNPs)) & 
         all(colnames(y) %in% colnames(metadata(y)$SNPs))) {
-      SNPs <- cbind(metadata(x)$SNPs[, colnames(x)], 
-                    metadata(y)$SNPs[, colnames(y)])
+      sharedSNPs <- intersect(rownames(metadata(x)$SNPs), 
+                              rownames(metadata(y)$SNPs))
+      SNPs <- cbind(metadata(x)$SNPs[sharedSNPs, colnames(x)], 
+                    metadata(y)$SNPs[sharedSNPs, colnames(y)])
       metadata(res) <- metadata(res)[names(metadata(res)) != "SNPs"]
       metadata(res)$SNPs <- SNPs # yes this is bizarre, yes it is needed
     } else { 
