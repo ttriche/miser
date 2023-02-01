@@ -4,10 +4,18 @@
 \alias{processFromIDATs}
 \title{read in a directory's worth of IDATs, QC them, optionally sesamize them all}
 \usage{
-processFromIDATs(frags = 1:3, addgeo = FALSE, justRgSet = FALSE, ...)
+processFromIDATs(
+  frags = 1:3,
+  targets = NULL,
+  addgeo = FALSE,
+  justRgSet = FALSE,
+  ...
+)
 }
 \arguments{
 \item{frags}{which elements of the filenames are relevant? (1:3)}
+
+\item{targets}{a targets dataframe (will be passed to minfi for reading)}
 
 \item{addgeo}{optional: try to annotate from GEO? (FALSE)}
 

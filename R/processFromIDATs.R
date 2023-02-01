@@ -4,6 +4,7 @@
 #'       runs QC, stuffs in metadata, and (if !justRgSet) sesamizes it. 
 #'
 #' @param frags     which elements of the filenames are relevant? (1:3)
+#' @param targets   a targets dataframe (will be passed to minfi for reading)
 #' @param addgeo    optional: try to annotate from GEO? (FALSE) 
 #' @param justRgSet optional: dump the rgSet and don't sesamize? (FALSE)
 #' @param ...       options to pass to sesame::sesamize
@@ -15,10 +16,10 @@
 #' @import minfi
 #'
 #' @export 
-processFromIDATs <- function(frags=1:3, addgeo=FALSE, justRgSet=FALSE, ...) {
+processFromIDATs <- function(frags=1:3, targets=NULL, addgeo=FALSE, justRgSet=FALSE, ...) {
 
   message("Cataloging IDATs...")
-  targets <- getSamps(frags=frags) 
+  if (is.null(targets)) targets <- getSamps(frags=frags) 
   message(nrow(targets), " samples found. Reading signals...")
   rgSet <- read.metharray.exp(".", targets=targets, verbose=TRUE)
 
@@ -27,6 +28,7 @@ processFromIDATs <- function(frags=1:3, addgeo=FALSE, justRgSet=FALSE, ...) {
   metadata(rgSet)$SNPs <- getSnpBeta(rgSet)
   metadata(rgSet)$control_metrics <- t(control_metrics(rgSet)) 
   metadata(rgSet)$control_flagged <- t(flag_control_failures(rgSet)) 
+  message(ncol(rgSet), " samples QC'ed. Proceeding...")
 
   # annotate?
   if (addgeo) { 
