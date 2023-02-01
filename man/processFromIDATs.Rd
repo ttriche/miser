@@ -9,6 +9,7 @@ processFromIDATs(
   targets = NULL,
   addgeo = FALSE,
   justRgSet = FALSE,
+  force = TRUE,
   ...
 )
 }
@@ -20,6 +21,8 @@ processFromIDATs(
 \item{addgeo}{optional: try to annotate from GEO? (FALSE)}
 
 \item{justRgSet}{optional: dump the rgSet and don't sesamize? (FALSE)}
+
+\item{force}{optional: pass the \code{force} argument to minfi? (TRUE)}
 
 \item{...}{options to pass to sesame::sesamize}
 }

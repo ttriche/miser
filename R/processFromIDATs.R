@@ -7,6 +7,7 @@
 #' @param targets   a targets dataframe (will be passed to minfi for reading)
 #' @param addgeo    optional: try to annotate from GEO? (FALSE) 
 #' @param justRgSet optional: dump the rgSet and don't sesamize? (FALSE)
+#' @param force     optional: pass the `force` argument to minfi? (TRUE)
 #' @param ...       options to pass to sesame::sesamize
 #'
 #' @return a GenomicRatioSet (or an rgSet in case of failure)
@@ -16,12 +17,12 @@
 #' @import minfi
 #'
 #' @export 
-processFromIDATs <- function(frags=1:3, targets=NULL, addgeo=FALSE, justRgSet=FALSE, ...) {
+processFromIDATs <- function(frags=1:3, targets=NULL, addgeo=FALSE, justRgSet=FALSE, force=TRUE, ...) {
 
   message("Cataloging IDATs...")
   if (is.null(targets)) targets <- getSamps(frags=frags) 
   message(nrow(targets), " samples found. Reading signals...")
-  rgSet <- read.metharray.exp(".", targets=targets, verbose=TRUE)
+  rgSet <- read.metharray.exp(".", targets=targets, verbose=TRUE, force=force)
 
   # QC (document how the SNPs are done...) 
   colnames(rgSet) <- rgSet$subject
