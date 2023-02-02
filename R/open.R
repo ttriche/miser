@@ -16,6 +16,10 @@
 #' IDATprefixes <- searchIDATprefixes(
 #'     system.file("extdata", "", package = "sesameData"))
 #' betas <- openSesame(IDATprefixes)
+#' 
+#' @import SummarizedExperiment 
+#' @import minfi
+#' 
 #' @export
 openSesame <- function(x, ...) {
     if (length(x) == 1) {
@@ -42,8 +46,6 @@ openSesame <- function(x, ...) {
 #' @param naFrac  maximum NA fraction for a probe before it gets dropped (1)
 #' @return a GenomicRatioSet
 reopenSesame <- function(x, naFrac=0.2) { 
-    pkgTest('minfi')
-    pkgTest('SummarizedExperiment')
     stopifnot(is(x, "GenomicRatioSet"))
     if (!"Basename" %in% names(SummarizedExperiment::colData(x))) {
         stop("No column `Basename` in mcols(x)... cannot proceed.")

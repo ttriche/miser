@@ -5,11 +5,14 @@
 #' @param parallel attempt to run in parallel? (This is a bad idea on laptops)
 #' @return a sesamized GenomicRatioSet from the input RGChannelSet 
 #'
+#' @import minfi
 #' @import parallel
+#' @import SummarizedExperiment 
 #' @importFrom S4Vectors metadata
 #' @importFrom S4Vectors metadata<-
 #' @importFrom BiocManager available 
 #' 
+#'
 #' @examples
 #' \donttest{
 #'
@@ -36,11 +39,9 @@
 #' }
 #' @export 
 sesamize <- function(x, naFrac=1, parallel=FALSE) { 
-    stopifnot(is(x, "RGChannelSet"))
-    pkgTest('SummarizedExperiment')
-    pkgTest('minfi')
-    
-    if (ncol(x) > 1) {
+   
+  stopifnot(is(x, "RGChannelSet"))
+  if (ncol(x) > 1) {
         nameses <- colnames(x)
         names(nameses) <- nameses
         if (parallel == TRUE) { 
