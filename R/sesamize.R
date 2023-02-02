@@ -78,7 +78,7 @@ sesamize <- function(x, naFrac=1, parallel=FALSE) {
         attr(dm, "platform") <- sub("HMEPIC", "EPIC", 
             sub("IlluminaHumanMethylation", "HM", 
                 sub("k$", "", minfi::annotation(x)["array"])))
-        sset <- chipAddressToSignal(dm) # see above for kludge
+        sset <- sesame:::chipAddressToSignal(dm) # see above for kludge
         Beta <- as.matrix(getBetas(dyeBiasCorrTypeINorm(noob(sset))))
         CN <- as.matrix(log2(totalIntensities(sset))[rownames(Beta)])
         minfi::RatioSet(
