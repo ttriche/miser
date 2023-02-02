@@ -6,7 +6,7 @@
 #' 
 #' @param stub    mandatory prefix for files (stub_betas.csv, stub_qc.csv)
 #' @param path    where to save the dumped CSV files (".")
-#' @param ...     options to pass to sesame::sesamize
+#' @param ...     options to pass to sesamize
 #'
 #' @return a GenomicRatioSet (or an rgSet in case of failure)
 #' 

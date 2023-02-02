@@ -11,7 +11,7 @@ dumpFromIDATs(stub, path = ".", ...)
 
 \item{path}{where to save the dumped CSV files (".")}
 
-\item{...}{options to pass to sesame::sesamize}
+\item{...}{options to pass to sesamize}
 }
 \value{
 a GenomicRatioSet (or an rgSet in case of failure)

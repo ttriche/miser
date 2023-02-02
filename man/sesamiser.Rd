@@ -31,5 +31,4 @@ Note 1: you may fare better with recountmethylation, check there first.
 Note 2: this would work just as well off the moby recountmethylation rgset.
 Note 3: this function will exit with an error if no IDATs are available.
 Note 4: if there is one supplementary file column, we will need to split it.
-Note 5: there are some mysterious new errors from sesame::sesamize() lately.
 }

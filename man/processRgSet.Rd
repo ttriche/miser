@@ -11,7 +11,7 @@ processRgSet(rgSet, addgeo = FALSE, ...)
 
 \item{addgeo}{optional: try to annotate from GEO, if not already done? (F)}
 
-\item{...}{options to pass to sesame::sesamize}
+\item{...}{options to pass to sesamize}
 }
 \value{
 \if{html}{\out{<div class="sourceCode">}}\preformatted{     a GenomicRatioSet (or an rgSet if failure)

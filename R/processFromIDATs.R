@@ -7,7 +7,7 @@
 #' @param targets   a targets dataframe (will be passed to minfi for reading)
 #' @param addgeo    optional: try to annotate from GEO? (FALSE) 
 #' @param justRgSet optional: dump the rgSet and don't sesamize? (FALSE)
-#' @param ...       options to pass to sesame::sesamize
+#' @param ...       options to pass to sesamize
 #'
 #' @return a GenomicRatioSet (or an rgSet in case of failure)
 #'

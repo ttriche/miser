@@ -2,7 +2,7 @@
 #' 
 #' @param rgSet     an RGChannelSet with SNPs and control_flagged in metadata()
 #' @param addgeo    optional: try to annotate from GEO, if not already done? (F)
-#' @param ...       options to pass to sesame::sesamize
+#' @param ...       options to pass to sesamize
 #'
 #' @return          a GenomicRatioSet (or an rgSet if failure)
 #'
@@ -13,7 +13,7 @@
 processRgSet <- function(rgSet, addgeo=FALSE, ...) {
 
   message("Attempting to sesamize ", ncol(rgSet), " samples...") 
-  grSet <- try(sesame::sesamize(rgSet, ...))
+  grSet <- try(sesamize(rgSet, ...)) # now part of miser
   if (inherits(grSet, "try-error")) {
     message("Failed to create GenomicRatioSet! Returning raw RGChannelSet.")
     return(rgSet)

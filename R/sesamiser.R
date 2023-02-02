@@ -5,7 +5,6 @@
 #' Note 2: this would work just as well off the moby recountmethylation rgset.
 #' Note 3: this function will exit with an error if no IDATs are available. 
 #' Note 4: if there is one supplementary file column, we will need to split it.
-#' Note 5: there are some mysterious new errors from sesame::sesamize() lately.
 #'
 #' @param GSE               which GSE to get
 #' @param element           which element of the getGEO result to work on? (1)
@@ -36,7 +35,7 @@ sesamiser <- function(GSE, element=1, suppcols=c("supplementary_file","supplemen
     message("Reading in IDATs...")
     rgSet <- getRGChannelSet(samps=covs, ...)
     message("Sesamizing...")
-    res <- sesame::sesamize(rgSet)
+    res <- sesamize(rgSet)
     message("Adding probe mask...")
     res <- sesamask(res)
     message("Done.")

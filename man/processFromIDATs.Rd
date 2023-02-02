@@ -21,7 +21,7 @@ processFromIDATs(
 
 \item{justRgSet}{optional: dump the rgSet and don't sesamize? (FALSE)}
 
-\item{...}{options to pass to sesame::sesamize}
+\item{...}{options to pass to sesamize}
 }
 \value{
 a GenomicRatioSet (or an rgSet in case of failure)
