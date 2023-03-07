@@ -3,6 +3,8 @@
 #' @param x an RGChannelSet, perhaps with colData of various flavors
 #' @param naFrac maximum NA fraction for a probe before it gets dropped (1)
 #' @param parallel attempt to run in parallel? (This is a bad idea on laptops)
+#' @param mft a data.frame with columns Probe_ID, M, U, and col (guess)
+#'
 #' @return a sesamized GenomicRatioSet from the input RGChannelSet 
 #'
 #' @import minfi
@@ -38,36 +40,31 @@
 #'
 #' }
 #' @export 
-sesamize <- function(x, naFrac=1, parallel=FALSE) { 
-   
+sesamize <- function(x, naFrac=1, parallel=FALSE, mft=NULL) { 
   stopifnot(is(x, "RGChannelSet"))
   if (ncol(x) > 1) {
-        nameses <- colnames(x)
-        names(nameses) <- nameses
+        nms <- colnames(x)
+        names(nms) <- nms
+        # use BiocParallel here
         if (parallel == TRUE) { 
-            res <- do.call(
-                SummarizedExperiment::cbind,
-                mclapply(nameses, function(y) sesamize(x[,y])))
+            res <- do.call(SummarizedExperiment::cbind,
+                           mclapply(nms, function(y) sesamize(x[,y], mft=mft)))
         } else { 
-            res <- do.call(
-                SummarizedExperiment::cbind, 
-                lapply(nameses, function(y) sesamize(x[,y])))
+            res <- do.call(SummarizedExperiment::cbind, 
+                           lapply(nms, function(y) sesamize(x[,y],mft=mft)))
         }
         res <- minfi::mapToGenome(res)
         kept <- which((rowSums(is.na(
             minfi::getBeta(res))) / ncol(res)) <= naFrac)
-        if (length(kept) < 1) 
-            stop("No probes survived with naFrac <= ",naFrac,".")
-
-
+        if (length(kept) < 1) stop("No probes survived naFrac <= ",naFrac,".")
         mfst <- packageVersion(paste(minfi::annotation(x), collapse="anno."))
         res@preprocessMethod <- c(
             rg.norm="SeSAMe (type I)",
             p.value="SeSAMe (pOOBAH)",
             sesame=as.character(packageVersion("sesame")),
             minfi=as.character(packageVersion("minfi")),
-            manifest=as.character(mfst))
-        
+            manifest=as.character(mfst)
+        )
         metadata(res)$SNPs <- minfi::getSnpBeta(x)
         SummarizedExperiment::assays(res)[["M"]] <- NULL 
         SummarizedExperiment::colData(res) <- SummarizedExperiment::colData(x)
@@ -75,15 +72,20 @@ sesamize <- function(x, naFrac=1, parallel=FALSE) {
     } else {
         message("Sesamizing ", colnames(x), "...")
         dm <- cbind(G=minfi::getGreen(x), R=minfi::getRed(x))
+        colnames(dm) <- c("G", "R")
+        if (is.null(mft)) {
+          data("mfts", package="miser")
+          if (nrow(dm) > 1000000) mft <- mfts$EPIC$ordering
+          if (nrow(dm) > 600000) mft <- mfts$HM450$ordering
+          if (nrow(dm) < 600000) mft <- mfts$MM285$ordering
+        }
         attr(dm, "platform") <- sub("HMEPIC", "EPIC", 
             sub("IlluminaHumanMethylation", "HM", 
                 sub("k$", "", minfi::annotation(x)["array"])))
-        sset <- sesame:::chipAddressToSignal(dm) # see above for kludge
+        sset <- sesame:::chipAddressToSignal(dm, mft=mft) # see above for kludge
         Beta <- as.matrix(getBetas(dyeBiasCorrTypeINorm(noob(sset))))
         CN <- as.matrix(log2(totalIntensities(sset))[rownames(Beta)])
         minfi::RatioSet(
             Beta=Beta, CN=CN, annotation=minfi::annotation(x))
     }
 }
-
-
