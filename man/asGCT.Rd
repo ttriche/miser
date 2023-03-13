@@ -4,12 +4,10 @@
 \alias{asGCT}
 \title{Dump DNA methylation values for quick and dirty IGV viewing}
 \usage{
-asGCT(x, toTDF = F, assay = 1, group = NULL, stub = NULL, genome = "hg19")
+asGCT(x, assay = 1, group = NULL, stub = NULL, genome = "hg19")
 }
 \arguments{
 \item{x}{a SummarizedExperiment-like object of some sort}
-
-\item{toTDF}{run igvtools totdf on the .GCT files? (default: no)}
 
 \item{assay}{the name of the assay to dump (default: assays(x)[\link{1}])}
 

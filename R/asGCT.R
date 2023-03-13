@@ -39,9 +39,8 @@ asGCT <- function(x, assay=1, group=NULL, stub=NULL, genome="hg19") {
 # add coordinates for features 
 .dumpGCT <- function(mat, gr, stub, genome="hg19") {
   fname <- paste(stub, genome, "gct", sep=".")
-  contents <- data.frame(NAME=rownames(mat), 
-                         Description=as.character(gr), 
-                         mat)
+  description <- paste0("na |@", as.character(gr), "|")
+  contents <- data.frame(NAME=rownames(mat), Description=description, mat)
   message("Dumping values to ", fname, "...")
   ## formatting for GCT 
   cat("#1.2", "\n", file=fname)
