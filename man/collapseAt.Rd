@@ -4,7 +4,14 @@
 \alias{collapseAt}
 \title{Collapse a SummarizedExperiment-like object over a GRanges}
 \usage{
-collapseAt(x, y, how = c("medians", "means"), minprobes = 2, imp = TRUE)
+collapseAt(
+  x,
+  y,
+  how = c("medians", "means"),
+  minprobes = 2,
+  imp = TRUE,
+  obj = FALSE
+)
 }
 \arguments{
 \item{x}{anything descended from a SummarizedExperiment}
@@ -16,6 +23,8 @@ collapseAt(x, y, how = c("medians", "means"), minprobes = 2, imp = TRUE)
 \item{minprobes}{minimum probes to summarize over (1)}
 
 \item{imp}{impute any remaining NAs? (FALSE)}
+
+\item{obj}{return an object resembling \code{x}? (FALSE)}
 }
 \value{
 \if{html}{\out{<div class="sourceCode">}}\preformatted{     an object with same colData but with new rowRanges & assays

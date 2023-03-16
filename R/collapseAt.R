@@ -5,6 +5,7 @@
 #' @param how       medians or means? (medians)
 #' @param minprobes minimum probes to summarize over (1)
 #' @param imp       impute any remaining NAs? (FALSE) 
+#' @param obj       return an object resembling `x`? (FALSE) 
 #'
 #' @return          an object with same colData but with new rowRanges & assays
 #' 
@@ -18,7 +19,7 @@
 #' @import          GenomicRanges 
 #'
 #' @export
-collapseAt <- function(x, y, how=c("medians", "means"), minprobes=2, imp=TRUE) {
+collapseAt <- function(x, y, how=c("medians", "means"), minprobes=2, imp=TRUE, obj=FALSE) {
 
   how <- match.arg(how) 
   fn <- switch(how,
@@ -61,5 +62,18 @@ collapseAt <- function(x, y, how=c("medians", "means"), minprobes=2, imp=TRUE) {
   }
 
   colnames(res) <- colnames(xx)
-  return(res)
+
+  if (!obj) {
+    return(res)
+  } else { 
+    xx <- x[seq_len(nrow(res)),] 
+    rownames(xx) <- rownames(res)
+    rr <- as(rownames(res), "GRanges")
+    rr$score <- countOverlaps(rr, x)
+    rowRanges(xx) <- rr
+    assays(xx) <- assays(xx)[1]
+    assays(xx, withDimnames=FALSE)[[1]] <- res
+    rownames(xx) <- rownames(res)
+    return(xx)
+  } 
 }
