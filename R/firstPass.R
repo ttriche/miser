@@ -9,11 +9,10 @@
 firstPass <- function(x, k=500, ...) {
   
   if (is(x, "GenomicRatioSet")) {
-    toPlot <- byExtremality(getBeta(keepSeqlevels(x, paste0("chr", 1:22), 
-                                                  pruning.mode="coarse")), k=k)
-  } else { 
-    toPlot <- byExtremality(x, k=k)
-  }
+    k <- intersect(seqlevels(x), paste0("chr", 1:22))
+    x <- getBeta(keepSeqlevels(x, k, pruning.mode="coarse"))
+  } 
+  toPlot <- byExtremality(x, k=k)
   message("Don't forget to plotSNPs() as well!") 
   Heatmap(as(toPlot, "matrix"), col=jet, name="Methylation", 
           clustering_distance_columns="manhattan",
