@@ -20,7 +20,7 @@ asMethBlocks <- function(x, y=NULL, useCpH=FALSE, minprobes=1, obj=TRUE) {
   require(matrixStats)
   if (is.null(y)) {
     mb <- paste0("methBlocks.EPIC.", unique(genome(x)))
-    data(mb, package="miser")
+    data(list=c(mb), package="miser") # `list` argument is key
     y <- get(mb)
   }
   stopifnot(is(y, "GenomicRanges")) ## must be a GRanges
