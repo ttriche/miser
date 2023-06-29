@@ -26,6 +26,8 @@ asMethBlocks <- function(x, y=NULL, useCpH=FALSE, minprobes=1, obj=TRUE) {
   stopifnot(is(y, "GenomicRanges")) ## must be a GRanges
   stopifnot(is(x, "SummarizedExperiment"))
   if (is(x, "GenomicRatioSet") & !useCpH) x <- x[ grep("^cg", rownames(x)), ] 
-  collapseAt(x=x, y=y, minprobes=minprobes, imp=FALSE, obj=obj)
+  collapsed <- collapseAt(x=x, y=y, minprobes=minprobes, imp=FALSE, obj=obj)
+  genome(collapsed) <- unique(genome(x))
+  return(collapsed)
 
 }
