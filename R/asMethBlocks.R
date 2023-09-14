@@ -36,7 +36,7 @@ asMethBlocks <- function(x, genome="hg19", proper=FALSE, stable=FALSE) {
   amb <- x[seq_len(nrow(blockBetas)), ]
   rownames(amb) <- rownames(blockBetas)
   assay(amb, "Beta") <- blockBetas
-  granges(amb) <- as(rownames(blockBetas), "GRanges")
+  rowRanges(amb) <- as(rownames(blockBetas), "GRanges")
   genome(amb) <- unique(genome(amb))
   return(amb)
 
