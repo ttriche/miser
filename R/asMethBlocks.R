@@ -1,33 +1,43 @@
 #' Collapse a GenomicRatioSet or similar over methylation blocks (per Kaplan)
 #'
-#' @param x         usually, a GenomicRatioSet or something like it
-#' @param y         regions to summarize over (methBlocks.EPIC.hg19)
-#' @param useCpH    include CpH probes? (FALSE, because it's a bad idea)
-#' @param minprobes minimum probes to summarize over (1)
-#' @param obj       keep the object the same (e.g. summarizedExperiment)? (TRUE)
+#' @param x         a GenomicRatioSet or something like it
+#' @param genome    genome to use for methylation block coordinates (hg19)
+#' @param proper    restrict to methylation blocks defined in Kaplan? (FALSE)
+#' @param stable    restrict to methylation blocks shared by hg19&hg38? (FALSE)
 #'
 #' @return          an object with same colData but with new rowRanges & assays
 #' 
 #' @details
-#' By default, methBlocks.EPIC.hg19 is used for summarization, and CpHs are not.
+#' By default, data(methBlocks) is used for summarization, singleton probes are
+#' included, methylation block rownames are returned against hg19, and neither 
+#' singletons (!proper) nor hg19-only blocks (!stable) are filtered out.
 #' 
 #' @import          minfi  
 #' @import          GenomicRanges 
 #'
 #' @export
-asMethBlocks <- function(x, y=NULL, useCpH=FALSE, minprobes=1, obj=TRUE) {
+asMethBlocks <- function(x, genome="hg19", proper=FALSE, stable=FALSE) {
 
-  require(matrixStats)
-  if (is.null(y)) {
-    mb <- paste0("methBlocks.EPIC.", unique(genome(x)))
-    data(list=c(mb), package="miser") # `list` argument is key
-    y <- get(mb)
-  }
-  stopifnot(is(y, "GenomicRanges")) ## must be a GRanges
   stopifnot(is(x, "SummarizedExperiment"))
-  if (is(x, "GenomicRatioSet") & !useCpH) x <- x[ grep("^cg", rownames(x)), ] 
-  collapsed <- collapseAt(x=x, y=y, minprobes=minprobes, imp=FALSE, obj=obj)
-  genome(collapsed) <- unique(genome(x))
-  return(collapsed)
+  
+  data("methBlocks", package="miser") 
+  keepCpGs <- rownames(x)[rowSums(is.na(getBeta(x))) < ncol(x)]
+  methBlocks <- subset(methBlocks, rownames(methBlocks) %in% keepCpGs)
+  prop <- paste0("in", toupper(substr(genome, 1, 1)), substr(genome, 2, 4))
+  if (proper) methBlocks <- subset(methBlocks, methBlocks[[prop]])
+  if (stable) methBlocks <- subset(methBlocks, inHg19 & inHg38)
+  methBlocks <- subset(methBlocks, !is.na(methBlocks[[genome]]))
+  message("Computing per-methylation-block averages...")
+  blockBetas <- do.call(rbind, 
+                        by(getBeta(x[rownames(methBlocks),]), 
+                           INDICES=methBlocks[[genome]],
+                           FUN=colMeans, na.rm=TRUE))
+  message("Done. Reconstructing ", class(x), "...")
+  amb <- x[seq_len(nrow(blockBetas)), ]
+  rownames(amb) <- rownames(blockBetas)
+  assay(amb, "Beta") <- blockBetas
+  granges(amb) <- as(rownames(blockBetas), "GRanges")
+  genome(amb) <- unique(genome(amb))
+  return(amb)
 
 }

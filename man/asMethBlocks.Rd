@@ -4,18 +4,16 @@
 \alias{asMethBlocks}
 \title{Collapse a GenomicRatioSet or similar over methylation blocks (per Kaplan)}
 \usage{
-asMethBlocks(x, y = NULL, useCpH = FALSE, minprobes = 1, obj = TRUE)
+asMethBlocks(x, genome = "hg19", proper = FALSE, stable = FALSE)
 }
 \arguments{
-\item{x}{usually, a GenomicRatioSet or something like it}
+\item{x}{a GenomicRatioSet or something like it}
 
-\item{y}{regions to summarize over (methBlocks.EPIC.hg19)}
+\item{genome}{genome to use for methylation block coordinates (hg19)}
 
-\item{useCpH}{include CpH probes? (FALSE, because it's a bad idea)}
+\item{proper}{restrict to methylation blocks defined in Kaplan? (FALSE)}
 
-\item{minprobes}{minimum probes to summarize over (1)}
-
-\item{obj}{keep the object the same (e.g. summarizedExperiment)? (TRUE)}
+\item{stable}{restrict to methylation blocks shared by hg19&hg38? (FALSE)}
 }
 \value{
 \if{html}{\out{<div class="sourceCode">}}\preformatted{     an object with same colData but with new rowRanges & assays
@@ -25,5 +23,7 @@ asMethBlocks(x, y = NULL, useCpH = FALSE, minprobes = 1, obj = TRUE)
 Collapse a GenomicRatioSet or similar over methylation blocks (per Kaplan)
 }
 \details{
-By default, methBlocks.EPIC.hg19 is used for summarization, and CpHs are not.
+By default, data(methBlocks) is used for summarization, singleton probes are
+included, methylation block rownames are returned against hg19, and neither
+singletons (!proper) nor hg19-only blocks (!stable) are filtered out.
 }
