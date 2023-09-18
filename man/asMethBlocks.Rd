@@ -4,26 +4,33 @@
 \alias{asMethBlocks}
 \title{Collapse a GenomicRatioSet or similar over methylation blocks (per Kaplan)}
 \usage{
-asMethBlocks(x, genome = "hg19", proper = FALSE, stable = FALSE)
+asMethBlocks(x, g = c("hg19", "hg38"), proper = FALSE, stable = FALSE)
 }
 \arguments{
 \item{x}{a GenomicRatioSet or something like it}
 
-\item{genome}{genome to use for methylation block coordinates (hg19)}
+\item{g}{genome to use for methylation block coordinates (hg19)}
 
 \item{proper}{restrict to methylation blocks defined in Kaplan? (FALSE)}
 
-\item{stable}{restrict to methylation blocks shared by hg19&hg38? (FALSE)}
+\item{stable}{restrict to sites/blocks shared across hg19 & hg38? (FALSE)}
 }
 \value{
 \if{html}{\out{<div class="sourceCode">}}\preformatted{     an object with same colData but with new rowRanges & assays
 }\if{html}{\out{</div>}}
 }
 \description{
-Collapse a GenomicRatioSet or similar over methylation blocks (per Kaplan)
-}
-\details{
 By default, data(methBlocks) is used for summarization, singleton probes are
 included, methylation block rownames are returned against hg19, and neither
-singletons (!proper) nor hg19-only blocks (!stable) are filtered out.
+singletons (!proper) nor unstable mappings (!stable) are filtered out.
+}
+\details{
+\code{stable} is a weird flag and you probably should not use it. If and only if
+a probe maps to the same region in hg19 and hg38, it is deemed stable. That
+region can be one base pair wide, or it can be a thousand base pairs wide.
+The point is that this set of mappings is very small (about 4000 probes).
+}
+\seealso{
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    switchMethBlocksGenome
+}\if{html}{\out{</div>}}
 }
