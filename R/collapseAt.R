@@ -25,7 +25,6 @@ collapseAt <- function(x, y, how=c("medians", "means"), minprobes=2, imp=TRUE, o
   fn <- switch(how,
                medians=colMedians,
                means=colMeans)
-  if (class(y) == "dmrcate.output") y <- extractRanges(y)
   stopifnot(is(y, "GenomicRanges")) ## must be a GRanges
   stopifnot(is(x, "SummarizedExperiment"))
 

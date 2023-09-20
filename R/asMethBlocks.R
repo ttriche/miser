@@ -48,6 +48,7 @@ asMethBlocks <- function(x, g=c("hg19","hg38"), proper=FALSE, stable=FALSE) {
   methBlocks <- subset(methBlocks, !is.na(methBlocks[[g]]))
   prop <- paste0("in", toupper(substr(g, 1, 1)), substr(g, 2, 4), "mb")
   if (proper) {
+    stopifnot(prop %in% names(methBlocks))
     methBlocks <- subset(methBlocks, methBlocks[[prop]])
     keepCpGs <- intersect(keepCpGs, rownames(methBlocks))
     M <- length(keepCpGs)
@@ -86,19 +87,57 @@ asMethBlocks <- function(x, g=c("hg19","hg38"), proper=FALSE, stable=FALSE) {
   placeholder <- rownames(subset(methBlocks, !duplicated(methBlocks[[g]])))
   blockBetas <- getBeta(x[placeholder, ])
   rownames(blockBetas) <- names(mbgr) 
-
   # only recompute regions with more than one probe
   byBlock[[g]] <- factor(byBlock[[g]])
   toSquash <- split.data.frame(getBeta(x[rownames(byBlock), ]), byBlock[[g]])
   res <- do.call(rbind, lapply(toSquash, colMeans, na.rm=TRUE)) # bplapply fails
   blockBetas[rownames(res), ] <- res
-  message("Done.")
  
   message("Reconstructing ", class(x), "...")
   amb <- x[seq_len(nrow(blockBetas)), ]
   rownames(amb) <- rownames(blockBetas)
   assay(amb, "Beta") <- blockBetas
   rowRanges(amb) <- mbgr
+  
+  message("Done.")
   return(amb)
+
+}
+
+
+# helper function
+sharedMethBlockPairs <- function(mb, g=c("hg19","hg38")) {
+
+  g <- match.arg(g)
+  g0 <- "hg38"
+  mb <- subset(mb, !is.na(mb[[g]]) & !is.na(mb[[g0]]))
+  mb$inBlocks <- mb[["inHg19mb"]] & mb[["inHg38mb"]]
+  mb$pairing <- paste0(as.character(mb[[g]]), "|", as.character(mb[[g0]]))
+  dupes <- mb$pairing[which(duplicated(mb$pairing))]
+  mb$dupe <- mb$pairing %in% dupes
+  mb$hits <- 1
+  mb$hits <- rowsum(mb$hits, mb$pairing)[mb$pairing, 1]
+  mb <- subset(mb, !duplicated(mb$pairing))
+
+  message("Pairing ", g, " and ", g0, " methylation block ranges...")
+  paired <- Pairs(as(mb[[g]], "GRanges"), as(mb[[g0]], "GRanges"))
+  names(paired) <- as.character(mb[[g]])
+  mcols(paired)$inBlocks <- mb$inBlocks
+  dupes <- names(paired)[duplicated(names(paired))]
+  mcols(paired)$splitMap <- names(paired) %in% dupes
+  ndups <- sum(names(paired) %in% dupes)
+  nuniq <- length(paired) - ndups
+  message("Found ", ndups, " split mappings and ", 
+          nuniq, " unique mappings from ", g, " to ", g0, ".")
+  return(paired)
+
+}
+
+# helper function
+splitSharedMethBlockPairs <- function(mb, g=c("hg19","hg38")) {
+
+  paired <- sharedMethBlockPairs(mb, g)
+  splt <- subset(paired, mcols(paired)$splitMap)
+  ssplt <- split(as.character(second(splt)), as.character(first(splt)))
 
 }

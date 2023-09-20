@@ -76,3 +76,43 @@ switchMethBlocksGenome <- function(x, to=c("hg38", "hg19")) {
   return(df)
 } 
 # system.time(chr1 <- .mbMapByChr(methBlox, "chr1", "hg19")) # about 10 minutes
+
+
+# helper function
+sharedMethBlockPairs <- function(mb, g=c("hg19","hg38")) {
+
+  g <- match.arg(g)
+  g0 <- "hg38"
+  mb <- subset(mb, !is.na(mb[[g]]) & !is.na(mb[[g0]]))
+  mb$inBlocks <- mb[["inHg19mb"]] & mb[["inHg38mb"]]
+  mb$pairing <- paste0(as.character(mb[[g]]), "|", as.character(mb[[g0]]))
+  dupes <- mb$pairing[which(duplicated(mb$pairing))]
+  mb$dupe <- mb$pairing %in% dupes
+  mb$hits <- 1
+  mb$hits <- rowsum(mb$hits, mb$pairing)[mb$pairing, 1]
+  mb <- subset(mb, !duplicated(pairing))[, c(g, g0, "inBlocks", "hits")]
+  rownames(mb) <- NULL
+
+  message("Pairing ", g, " and ", g0, " methylation block ranges...")
+  paired <- Pairs(as(mb[[g]], "GRanges"), as(mb[[g0]], "GRanges"))
+  names(paired) <- as.character(mb[[g]])
+  mcols(paired)$inBlocks <- mb$inBlocks
+  dupes <- names(paired)[duplicated(names(paired))]
+  mcols(paired)$splitMap <- names(paired) %in% dupes
+  ndups <- sum(names(paired) %in% dupes)
+  mcols(paired)$hits <- mb$hits
+  nuniq <- length(paired) - ndups
+  message("Found ", ndups, " split mappings and ", 
+          nuniq, " unique mappings from ", g, " to ", g0, ".")
+  return(paired)
+
+}
+
+# helper function
+splitSharedMethBlockPairs <- function(mb, g=c("hg19","hg38")) {
+
+  paired <- sharedMethBlockPairs(mb, g)
+  splt <- subset(paired, mcols(paired)$splitMap)
+  ssplt <- split(as.character(second(splt)), as.character(first(splt)))
+
+}

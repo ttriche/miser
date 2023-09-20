@@ -2,8 +2,8 @@ Package: miser
 Type: Package
 Title: the poor man's methylation suite (cf. `sesamizer`)
 Description: this package makes my life less annoying when working off of GEO
-Version: 0.99.20230918
-Date: 2023-09-18
+Version: 0.99.20230920
+Date: 2023-09-20
 Authors@R: c(person("Tim", "Triche", role=c("aut", "cre"), 
                     email="tim.triche@gmail.com"))
 Author: Tim Triche [aut, cre]
@@ -13,20 +13,14 @@ BugReports: https://github.com/ttriche/miser/issues
 License: GPL-3
 Depends:
     minfi,
-    Homo.sapiens, 
     R (>= 3.0.0)
 Imports:
     RcppML,
-    dbscan,
     mclust,
     limma,
     Matrix,
     sesame,
-    DMRcate,
-    RSQLite, 
     circlize,
-    survival,
-    GEOmetadb,
     rtracklayer,
     BiocParallel,
     ComplexHeatmap
