@@ -15,6 +15,7 @@ Depends:
     minfi,
     R (>= 3.0.0)
 Imports:
+    impute,
     RcppML,
     mclust,
     limma,
@@ -27,7 +28,6 @@ Imports:
 Suggests:
     covr,
     erma, 
-    impute,
     testthat,
     compartmap,
     DelayedArray,
