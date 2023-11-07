@@ -1,59 +1,69 @@
-#' sesamize an RGChannelSet with sensible QC and passing BPPARAM, etc.
+#' sesamize a result with sensible QC and passing BPPARAM, etc.
 #' 
-#' @param rgSet     an RGChannelSet with SNPs and control_flagged in metadata()
+#' @param x       a SummarizedExperiment-derived object with SNPs and controls
+#' @param justDump  just dump the sesamized result? (TRUE) 
 #' @param addgeo    optional: try to annotate from GEO, if not already done? (F)
 #' @param ...       options to pass to sesamize
 #'
-#' @return          a GenomicRatioSet (or an rgSet if failure)
+#' @return          a GenomicRatioSet (or an res if failure)
 #'
 #' @import sesame 
 #' @import minfi
 #'
 #' @export 
-processRgSet <- function(rgSet, addgeo=FALSE, ...) {
+processResult <- function(x, addgeo=FALSE, justResult=TRUE, ...) {
 
-  message("Attempting to sesamize ", ncol(rgSet), " samples...") 
-  grSet <- try(sesamize(rgSet, ...)) # now part of miser
-  if (inherits(grSet, "try-error")) {
+  message("Attempting to sesamize ", ncol(x), " samples...") 
+  res <- try(sesamize(x, ...)) # now part of miser
+  if (inherits(res, "try-error")) {
     message("Failed to create GenomicRatioSet! Returning raw RGChannelSet.")
-    return(rgSet)
+    return(x)
   } else { 
     message("Done.")
   }
+  metadata(res) <- metadata(x)
 
-  metadata(grSet) <- metadata(rgSet)
-  if (!"SNPs" %in% names(metadata(grSet))) {
-    message("Adding SNP intensities to metadata...")
-    metadata(grSet)$SNPs <- getSnpBeta(rgSet) 
-  } 
-  if (!"control_flagged" %in% names(metadata(grSet))) {
-    message("Flagging control probe failures in metadata...")
-    metadata(grSet)$control_flagged <- t(flag_control_failures(rgSet))
-  }
-  # sesame's version is better,
-  # but minfi's is more convenient
-  infsex <- try(minfi::getSex(grSet))
-  if (!inherits(infsex, "try-error")) {
-    colData(grSet)$inferred_sex <- infsex$predictedSex
-  } else { 
-    warning("Could not automatically infer sex from CN.")
-  }
-  rowData(grSet)$IslandStatus <- minfi::getIslandStatus(grSet)
-  metadata(grSet)$XYstats <- XYstats(grSet) # using the above bits...
-  rowData(grSet)$NAfrac <- rowSums(is.na(getBeta(grSet)))/ncol(grSet)
-  colData(grSet)$NAfrac <- NAfrac(grSet)
-  
-  if (addgeo) { 
-    message("Attempting to pull metadata...")
-    res <- try(addCharacteristics(grSet))
-    if (inherits(res, "try-error")) {
-      message("GEO annotation failed, returning unmodified results.")
-    } else {
-      message("Success! ", ncol(res), " samples annotated with GEO metadata.")
-      grSet <- res
+  if (!justDump) {
+    # {{{ QC and cleanup as needed
+    if (!"SNPs" %in% names(metadata(res))) {
+      message("Adding SNP intensities to metadata...")
+      metadata(res)$SNPs <- getSnpBeta(x) 
+    } 
+    if (!"control_flagged" %in% names(metadata(res))) {
+      message("Flagging control probe failux in metadata...")
+      metadata(res)$control_flagged <- t(flag_control_failures(x))
+    }
+    # sesame's version is better,
+    # but minfi's is more convenient
+    infsex <- try(minfi::getSex(res))
+    if (!inherits(infsex, "try-error")) {
+      colData(res)$inferred_sex <- infsex$predictedSex
+    } else { 
+      warning("Could not automatically infer sex from CN.")
+    }
+    rowData(res)$IslandStatus <- minfi::getIslandStatus(res)
+    metadata(res)$XYstats <- XYstats(res) # using the above bits...
+    rowData(res)$NAfrac <- rowSums(is.na(getBeta(res)))/ncol(res)
+    colData(res)$NAfrac <- NAfrac(res)
+    # }}}
+    if (addgeo) { 
+      message("Attempting to pull metadata...")
+      # {{{
+      annotated <- try(addCharacteristics(res))
+      if (inherits(annotated, "try-error")) {
+        message("GEO annotation failed, returning unmodified results.")
+      } else {
+        message("Success! ", ncol(annotated), " samples annotated from GEO.")
+        res <- annotated
+      }
+      # }}}
     }
   }
-  
-  return(grSet)
+
+  return(res)
 
 }
+
+
+# backwards compatibility
+processRgSet <- processResult

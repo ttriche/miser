@@ -2,24 +2,38 @@
 % Please edit documentation in R/sesamize.R
 \name{sesamize}
 \alias{sesamize}
-\title{"fix" an RGset (for which IDATs may be unavailable) with Sesame}
+\title{"fix" a SummarizedExperiment (for which IDATs may be unavailable) with Sesame}
 \usage{
-sesamize(x, naFrac = 1, parallel = FALSE, mft = NULL)
+sesamize(
+  x,
+  genome = "hg19",
+  BPPARAM = SerialParam(),
+  mft = NULL,
+  sce = TRUE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
-\item{x}{an RGChannelSet, perhaps with colData of various flavors}
+\item{x}{SummarizedExperiment-derived object with assays Red & Green}
 
-\item{naFrac}{maximum NA fraction for a probe before it gets dropped (1)}
+\item{genome}{Which genome should the probes be mapped to? (hg19)}
 
-\item{parallel}{attempt to run in parallel? (This is a bad idea on laptops)}
+\item{BPPARAM}{a BiocParallelParam object (SerialParam())}
 
 \item{mft}{a data.frame with columns Probe_ID, M, U, and col (guess)}
+
+\item{sce}{return SingleCellExperiment rather than a RatioSet? (TRUE)}
+
+\item{verbose}{be verbose? (FALSE)}
+
+\item{...}{additional arguments passed to openSesame}
 }
 \value{
-a sesamized GenomicRatioSet from the input RGChannelSet
+a sesamized SingleCellExperiment or GenomicRatioSet from \code{x}
 }
 \description{
-"fix" an RGset (for which IDATs may be unavailable) with Sesame
+"fix" a SummarizedExperiment (for which IDATs may be unavailable) with Sesame
 }
 \examples{
 \donttest{
@@ -45,4 +59,5 @@ a sesamized GenomicRatioSet from the input RGChannelSet
   }
 
 }
+
 }

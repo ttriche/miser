@@ -1,15 +1,18 @@
-#' "fix" an RGset (for which IDATs may be unavailable) with Sesame
+#' "fix" a SummarizedExperiment (for which IDATs may be unavailable) with Sesame
 #' 
-#' @param x an RGChannelSet, perhaps with colData of various flavors
-#' @param naFrac maximum NA fraction for a probe before it gets dropped (1)
-#' @param parallel attempt to run in parallel? (This is a bad idea on laptops)
-#' @param mft a data.frame with columns Probe_ID, M, U, and col (guess)
+#' @param x         SummarizedExperiment-derived object with assays Red & Green
+#' @param genome    Which genome should the probes be mapped to? (hg19)
+#' @param BPPARAM   a BiocParallelParam object (SerialParam())
+#' @param mft       a data.frame with columns Probe_ID, M, U, and col (guess)
+#' @param sce       return SingleCellExperiment rather than a RatioSet? (TRUE)  
+#' @param verbose   be verbose? (FALSE) 
+#' @param ...       additional arguments passed to openSesame
 #'
-#' @return a sesamized GenomicRatioSet from the input RGChannelSet 
+#' @return a sesamized SingleCellExperiment or GenomicRatioSet from `x`
 #'
-#' @import minfi
-#' @import parallel
+#' @import BiocParallel
 #' @import SummarizedExperiment 
+#' @import SingleCellExperiment 
 #' @importFrom S4Vectors metadata
 #' @importFrom S4Vectors metadata<-
 #' @importFrom BiocManager available 
@@ -39,53 +42,112 @@
 #'   }
 #'
 #' }
+#'
 #' @export 
-sesamize <- function(x, naFrac=1, parallel=FALSE, mft=NULL) { 
-  stopifnot(is(x, "RGChannelSet"))
+#'
+sesamize <- function(x, genome="hg19", BPPARAM=SerialParam(), mft=NULL, sce=TRUE, verbose=FALSE, ...) { 
+
+  stopifnot(is(x, "SummarizedExperiment"))
+  stopifnot(all(c("Green", "Red") %in% assayNames(x)))
+
   if (ncol(x) > 1) {
-        nms <- colnames(x)
-        names(nms) <- nms
-        # use BiocParallel here
-        if (parallel == TRUE) { 
-            res <- do.call(SummarizedExperiment::cbind,
-                           mclapply(nms, function(y) sesamize(x[,y], mft=mft)))
-        } else { 
-            res <- do.call(SummarizedExperiment::cbind, 
-                           lapply(nms, function(y) sesamize(x[,y],mft=mft)))
-        }
-        res <- minfi::mapToGenome(res)
-        kept <- which((rowSums(is.na(
-            minfi::getBeta(res))) / ncol(res)) <= naFrac)
-        if (length(kept) < 1) stop("No probes survived naFrac <= ",naFrac,".")
-        mfst <- packageVersion(paste(minfi::annotation(x), collapse="anno."))
-        res@preprocessMethod <- c(
-            rg.norm="SeSAMe (type I)",
-            p.value="SeSAMe (pOOBAH)",
-            sesame=as.character(packageVersion("sesame")),
-            minfi=as.character(packageVersion("minfi")),
-            manifest=as.character(mfst)
-        )
-        metadata(res)$SNPs <- minfi::getSnpBeta(x)
-        SummarizedExperiment::assays(res)[["M"]] <- NULL 
-        SummarizedExperiment::colData(res) <- SummarizedExperiment::colData(x)
-        return(res[kept, ])
-    } else {
-        message("Sesamizing ", colnames(x), "...")
-        dm <- cbind(G=minfi::getGreen(x), R=minfi::getRed(x))
-        colnames(dm) <- c("G", "R")
-        if (is.null(mft)) {
-          data("mfts", package="miser")
-          if (nrow(dm) > 1000000) mft <- mfts$EPIC$ordering
-          if (nrow(dm) > 600000) mft <- mfts$HM450$ordering
-          if (nrow(dm) < 600000) mft <- mfts$MM285$ordering
-        }
-        attr(dm, "platform") <- sub("HMEPIC", "EPIC", 
-            sub("IlluminaHumanMethylation", "HM", 
-                sub("k$", "", minfi::annotation(x)["array"])))
-        sset <- sesame:::chipAddressToSignal(dm, mft=mft) # see above for kludge
-        Beta <- as.matrix(getBetas(dyeBiasCorrTypeINorm(noob(sset))))
-        CN <- as.matrix(log2(totalIntensities(sset))[rownames(Beta)])
-        minfi::RatioSet(
-            Beta=Beta, CN=CN, annotation=minfi::annotation(x))
+
+    # {{{ recursively sesamize each sample
+    nms <- colnames(x)
+    names(nms) <- nms
+    res <- do.call(cbind, 
+                   bplapply(nms, 
+                            function(y) sesamize(x[,y], mft=mft), 
+                            BPPARAM=BPPARAM))
+    ppm <- c(rg.norm="SeSAMe (type I)",
+             p.value="SeSAMe (pOOBAH)",
+             manifest=annotation(x)["array"])
+
+    if (!sce) {
+      # {{{ deprecated 
+      res <- minfi::mapToGenome(res)
+      mfst <- packageVersion(paste(minfi::annotation(x), collapse="anno."))
+      res@preprocessMethod <- ppm
+      # }}} 
     }
+
+    metadata(res) <- metadata(x)
+    metadata(res)$annotation <- annotation(x)
+    metadata(res)$preprocessMethod <- ppm
+    colData(res) <- colData(x)
+    res <- res[which(rowSums(is.na(getBeta(res))) < ncol(res)), ]
+    res <- res[, which(colSums(is.na(getBeta(res))) < nrow(res))]
+    if (sce) {
+      res <- as(res, "SingleCellExperiment")
+      rowRanges(res) <- .getMappings(x)[rownames(res)]
+    }
+    return(res)
+
+  } else {
+   
+    # sesamize one sample. this is the crux  
+    if (verbose) message("Sesamizing ", colnames(x), "...")
+    rg <- cbind(G=getGreen(x), R=getRed(x)) # newly generic 
+    colnames(rg) <- c("G", "R")
+    if (is.null(mft)) { # kludge; ask Wanding how to do better
+      data("mfts", package="miser")
+      if (nrow(rg) > 1000000) {
+        mft <- mfts$EPIC$ordering
+      } else if (nrow(rg) > 600000) {
+        mft <- mfts$HM450$ordering
+      } else if (nrow(rg) < 600000) {
+        mft <- mfts$MM285$ordering
+      }
+    }
+    attr(rg, "platform") <- sub("HMEPIC", "EPIC", 
+                                sub("IlluminaHumanMethylation", "HM", 
+                                    sub("k$", "", annotation(x)["array"])))
+    sdf <- sesame:::chipAddressToSignal(rg, mft=mft) # see above for kludge
+    if (verbose) message(nrow(sdf), " probe addresses for ", colnames(x))
+    Beta <- matrix(openSesame(sdf), ncol=1, 
+                   dimnames=list(sdf$Probe_ID, colnames(x)))
+    CN <- matrix(log2(totalIntensities(sdf))[rownames(Beta)], ncol=1, 
+                 dimnames=list(sdf$Probe_ID, colnames(x)))
+    res <- SummarizedExperiment(assays=list(Beta=Beta, CN=CN)) 
+    if (verbose) message(nrow(res), " probes processed for ", colnames(x))
+    preprocessMethod(res) <- preprocessMethod(x)
+    annotation(res) <- annotation(x)
+    return(res)
+
+  }
+}
+
+
+# helper fn
+.getAry <- function(ary) {
+  if (is(ary, "SummarizedExperiment")) ary <- annotation(ary)["array"]
+  sub("450", "HM450", sub("IlluminaHumanMethylation", "", sub("k$", "", ary)))
+}
+
+
+# helper fn
+.getPossible <- function(ary) {
+  sesameDataList(filter=paste(.getAry(ary), "probeInfo", sep="."))$Title
+}
+
+
+# helper fn
+.getMappings <- function(ary, genome="hg19") { 
+  possible <- .getPossible(ary)
+  if (length(possible) > 1) {
+    message("Multiple possible mappings:")
+    for (i in possible) message(i)
+    stop("Please choose one manually.")
+  } else { 
+    sdg <- sesameDataGet(possible)
+    mapping <- paste("mapped", "probes", genome, sep=".")
+    mapped <- sdg[[mapping]]
+    genome(mapped) <- genome
+    
+    # completely ignoring the existence of MM285...
+    masking <- ifelse(genome == "hg38", "mask", paste("mask", genome, sep="."))
+    masked <- sdg[[masking]]
+    mcols(mapped)[["mask"]] <- names(mapped) %in% masked
+  }
+  return(mapped)
 }

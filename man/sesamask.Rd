@@ -7,10 +7,10 @@
 sesamask(x)
 }
 \arguments{
-\item{x}{a GenomicRatioSet}
+\item{x}{a suitable object (SummarizedExperiment-derived)}
 }
 \value{
-the same GenomicRatioSet but with $mask in rowData(x) filled out
+the same object but with $mask in rowData(x) filled out
 }
 \description{
 since GenomicRatioSets have their platform annotated, we just use that

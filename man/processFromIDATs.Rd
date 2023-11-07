@@ -9,6 +9,8 @@ processFromIDATs(
   targets = NULL,
   addgeo = FALSE,
   justRgSet = FALSE,
+  forSesame = FALSE,
+  verbose = FALSE,
   ...
 )
 }
@@ -19,14 +21,24 @@ processFromIDATs(
 
 \item{addgeo}{optional: try to annotate from GEO? (FALSE)}
 
-\item{justRgSet}{optional: dump the rgSet and don't sesamize? (FALSE)}
+\item{justRgSet}{optional: dump the result and don't sesamize? (FALSE)}
+
+\item{forSesame}{optional: avoid loading minfi data structures? (FALSE)}
 
 \item{...}{options to pass to sesamize}
 }
 \value{
-a GenomicRatioSet (or an rgSet in case of failure)
+a SummarizedExperiment-derived object of some sort (see Details)
 }
 \description{
 Note: this function simply reads all IDATs in the current directory,
 runs QC, stuffs in metadata, and (if !justRgSet) sesamizes it.
+}
+\details{
+minfi is becoming a pain in the ass to deal with due to its dependencies, so
+this function can emit various SummarizedExperiment-derived results (whether
+an RGChannelSet, a GenomicRatioSet, a SummarizedExperiment, or a
+SingleCellExperiment, depending upon its parameters). The only real guarantee
+is that, in the absence of an error, a SummarizedExperiment-derived object
+will be returned, and it will accommodate the usual generic getWhatever()s.
 }
